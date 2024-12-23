@@ -12,3 +12,5 @@ export const API_ENDPOINT = {
   CONTACTS: 'crm/v2.1/Contacts',
   SEARCH: 'crm/v7/Accounts/search',
 }
+
+export const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'

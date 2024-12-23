@@ -1,3 +1,4 @@
+import { CORS_PROXY } from '@/conf'
 import useAccessToken from '@/hooks/useAccessToken'
 import { Data } from '@/types'
 import { convertDateToReadableFormat, formatRupee } from '@/utils'
@@ -26,7 +27,7 @@ export default function ItemDetails() {
 
   async function fetchDetails() {
     const res = await fetch(
-      `/zoho/crm/v7/Accounts/search?criteria=Auction_id:equals:${id}`,
+      `${CORS_PROXY}https://www.zohoapis.in/crm/v7/Accounts/search?criteria=Auction_id:equals:${id}`,
       {
         headers: {
           Authorization: `Zoho-oauthtoken ${accessToken}`,
