@@ -12,12 +12,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/zoho': {
-        target: 'https://www.zohoapis.in', // Base API URL
-        changeOrigin: true, // Change the origin to match the target
-        rewrite: (path) => path.replace(/^\/zoho/, ''), // Remove '/zoho' from the path before forwarding
+        target: 'https://www.zohoapis.in',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/zoho/, ''),
         configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq) => {
-            proxyReq.removeHeader('Origin') // Remove the Origin header
+            proxyReq.removeHeader('Origin')
           })
         },
       },
@@ -26,6 +26,7 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/token/, ''),
       },
+      '/tokenn': 'https://accounts.zoho.in',
     },
   },
 })
