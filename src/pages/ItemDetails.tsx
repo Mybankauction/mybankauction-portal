@@ -27,7 +27,7 @@ export default function ItemDetails() {
 
   async function fetchDetails() {
     const res = await fetch(
-      `${CORS_PROXY}https://www.zohoapis.in/crm/v7/Accounts/search?criteria=Auction_id:equals:${id}`,
+      `/zoho/crm/v7/Accounts/search?criteria=Auction_id:equals:${id}`,
       {
         headers: {
           Authorization: `Zoho-oauthtoken ${accessToken}`,
