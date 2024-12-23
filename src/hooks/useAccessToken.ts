@@ -21,7 +21,7 @@ const useAccessToken = () => {
       }
 
       const res = await fetch(
-        `${CORS_PROXY}https://accounts.zoho.in/${API_ENDPOINT.REFRESH_TOKEN}?refresh_token=${ENV.VITE_API_REFRESH_TOKEN}&client_id=${ENV.VITE_API_CLIENT_ID}&client_secret=${ENV.VITE_API_CLIENT_SECRET}&grant_type=refresh_token`,
+        `https://accounts.zoho.in/${API_ENDPOINT.REFRESH_TOKEN}?refresh_token=${ENV.VITE_API_REFRESH_TOKEN}&client_id=${ENV.VITE_API_CLIENT_ID}&client_secret=${ENV.VITE_API_CLIENT_SECRET}&grant_type=refresh_token`,
         { method: 'POST' }
       )
       if (!res.ok) throw new Error('Failed to fetch new token')
