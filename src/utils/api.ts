@@ -21,7 +21,7 @@ export async function registerUser(userData: any, accessToken: string) {
   }
   // debugger
   console.log(zohoData)
-  const response = await fetch(`/zoho/${API_ENDPOINT.CONTACTS}`, {
+  const response = await fetch(`/zoho/crm/v2/Contacts`, {
     method: 'POST',
     headers: {
       Authorization: `Zoho-oauthtoken ${accessToken}`,
