@@ -27,7 +27,7 @@ export default function ItemDetails() {
 
   async function fetchDetails() {
     const res = await fetch(
-      `/zoho/crm/v7/Accounts/search?criteria=Auction_id:equals:${id}`,
+      `/.netlify/functions/proxy/zoho/crm/v7/Accounts/search?criteria=Auction_id:equals:${id}`,
       {
         headers: {
           Authorization: `Zoho-oauthtoken ${accessToken}`,
@@ -40,7 +40,7 @@ export default function ItemDetails() {
 
   const fetchAccountIdDetails = async (id: string | undefined) => {
     const res = await fetch(
-      `/zoho/crm/v7/Accounts/search?criteria=Auction_id:equals:${id}`,
+      `/.netlify/functions/proxy/zoho/crm/v7/Accounts/search?criteria=Auction_id:equals:${id}`,
       {
         method: 'GET',
         headers: {
@@ -87,7 +87,7 @@ export default function ItemDetails() {
       ],
     }
 
-    const res = await fetch('/zoho/crm/v7/Deals', {
+    const res = await fetch('/.netlify/functions/proxy/zoho/crm/v7/Deals', {
       method: 'POST',
       headers: {
         Authorization: `Zoho-oauthtoken ${accessToken}`,

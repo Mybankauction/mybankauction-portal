@@ -27,7 +27,7 @@ export default function Login() {
     // Check if the email is in the database
     try {
       const response = await fetch(
-        `/zoho/crm/v7/Contacts/search?email=${loginEmail}`,
+        `/.netlify/functions/proxy/zoho/crm/v7/Contacts/search?email=${loginEmail}`,
         {
           method: 'GET',
           headers: {
@@ -49,14 +49,17 @@ export default function Login() {
             },
           ],
         }
-        const res = await fetch(`/zoho/crm/v7/Contacts/${data.data[0].id}`, {
-          method: 'PUT',
-          headers: {
-            Authorization: `Zoho-oauthtoken ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(constructedData),
-        })
+        const res = await fetch(
+          `/.netlify/functions/proxy/zoho/crm/v7/Contacts/${data.data[0].id}`,
+          {
+            method: 'PUT',
+            headers: {
+              Authorization: `Zoho-oauthtoken ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(constructedData),
+          }
+        )
         const _data = await res.json()
         console.log(_data)
         // After sending put request with login code and user id
