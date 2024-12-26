@@ -1,4 +1,4 @@
-import { API_ENDPOINT, CORS_PROXY, ENV } from '@/conf'
+import { SERVER_URL } from '@/conf'
 import { useEffect, useState } from 'react'
 
 const useAccessToken = () => {
@@ -20,10 +20,9 @@ const useAccessToken = () => {
         return
       }
 
-      const res = await fetch(
-        `/token/${API_ENDPOINT.REFRESH_TOKEN}?refresh_token=${ENV.VITE_API_REFRESH_TOKEN}&client_id=${ENV.VITE_API_CLIENT_ID}&client_secret=${ENV.VITE_API_CLIENT_SECRET}&grant_type=refresh_token`,
-        { method: 'POST' }
-      )
+      const res = await fetch(`${SERVER_URL}/api/zoho/token`, {
+        method: 'POST',
+      })
       if (!res.ok) throw new Error('Failed to fetch new token')
       const data = await res.json()
 

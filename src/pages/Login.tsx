@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/conf'
 import useAccessToken from '@/hooks/useAccessToken'
 import { generateLoginCode } from '@/utils'
 import { triggerAuthUpdate } from '@/utils/auth'
@@ -27,7 +28,7 @@ export default function Login() {
     // Check if the email is in the database
     try {
       const response = await fetch(
-        `/.netlify/functions/proxy/zoho/crm/v7/Contacts/search?email=${loginEmail}`,
+        `${API_BASE_URL}/crm/v7/Contacts/search?email=${loginEmail}`,
         {
           method: 'GET',
           headers: {
@@ -50,7 +51,7 @@ export default function Login() {
           ],
         }
         const res = await fetch(
-          `/.netlify/functions/proxy/zoho/crm/v7/Contacts/${data.data[0].id}`,
+          `${API_BASE_URL}/crm/v7/Contacts/${data.data[0].id}`,
           {
             method: 'PUT',
             headers: {

@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from '@/conf'
+import { API_BASE_URL, API_ENDPOINT } from '@/conf'
 import { create } from 'zustand'
 
 type Filters = {
@@ -58,8 +58,8 @@ export const useApiStore = create<ApiStoreState>((set) => ({
     const criteria = criteriaParts.join('and')
     const encodedCriteria = encodeURIComponent(criteria)
 
-    const url = `/.netlify/functions/proxy/zoho/${API_ENDPOINT.SEARCH}?criteria=Reserve_price:greater_than:0${encodedCriteria}&page=${currentPage}&per_page=${itemsPerPage}`
-
+    const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=Reserve_price:greater_than:0${encodedCriteria}&page=${currentPage}&per_page=${itemsPerPage}`
+    console.log({ url })
     try {
       const response = await fetch(url, {
         headers: {

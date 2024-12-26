@@ -1,8 +1,8 @@
-import { API_ENDPOINT } from '@/conf'
+import { API_BASE_URL, API_ENDPOINT } from '@/conf'
 
 export async function verifyRefCode(refCode: string, accessToken: string) {
   const response = await fetch(
-    `/.netlify/functions/proxy/zoho/${API_ENDPOINT.CONTACTS}/search?criteria=referral_id:equals:${refCode}`,
+    `${API_BASE_URL}/${API_ENDPOINT.CONTACTS}/search?criteria=referral_id:equals:${refCode}`,
     {
       method: 'GET',
       headers: {
@@ -19,18 +19,14 @@ export async function registerUser(userData: any, accessToken: string) {
   const zohoData = {
     data: [{ ...userData, Last_Name: userData.Name1 }],
   }
-  // debugger
-  console.log(zohoData)
-  const response = await fetch(
-    `/.netlify/functions/proxy/zoho/crm/v2/Contacts`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Zoho-oauthtoken ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(zohoData),
-    }
-  )
+
+  const response = await fetch(`${API_BASE_URL}/${API_ENDPOINT.CONTACTS}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Zoho-oauthtoken ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(zohoData),
+  })
   return response.json()
 }

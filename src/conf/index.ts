@@ -11,6 +11,10 @@ export const API_ENDPOINT = {
   REFRESH_TOKEN: 'oauth/v2/token',
   CONTACTS: 'crm/v2.1/Contacts',
   SEARCH: 'crm/v7/Accounts/search',
+  DEAL: 'crm/v7/Deals',
 }
 
-export const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'
+export const SERVER_URL = 'http://localhost:3000'
+// export const SERVER_URL = 'https://mybankauction-backend.vercel.app'
+
+export const API_BASE_URL = `${SERVER_URL}/api/zoho?endpoint=`
