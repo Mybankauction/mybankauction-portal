@@ -1,4 +1,4 @@
-import { API_BASE_URL, API_ENDPOINT, CORS_PROXY } from '@/conf'
+import { API_BASE_URL, API_ENDPOINT } from '@/conf'
 import useAccessToken from '@/hooks/useAccessToken'
 import { Data } from '@/types'
 import { convertDateToReadableFormat, formatRupee } from '@/utils'
