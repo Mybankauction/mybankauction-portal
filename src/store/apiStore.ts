@@ -37,12 +37,12 @@ export const useApiStore = create<ApiStoreState>((set) => ({
     const criteriaParts: string[] = []
     if (filters.auctionStartDate) {
       criteriaParts.push(
-        `&(Auction_start_date:greater_than:${filters.auctionStartDate})`
+        `(Auction_start_date:greater_than:${filters.auctionStartDate})`
       )
     }
     if (filters.auctionEndDate) {
       criteriaParts.push(
-        `&(Auction_end_date:less_than:${filters.auctionEndDate})`
+        `(Auction_end_date:less_than:${filters.auctionEndDate})`
       )
     }
     if (filters.area) {
@@ -58,7 +58,10 @@ export const useApiStore = create<ApiStoreState>((set) => ({
     const criteria = criteriaParts.join('and')
     const encodedCriteria = encodeURIComponent(criteria)
 
-    const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=Reserve_price:greater_than:0${encodedCriteria}&page=${currentPage}&per_page=${itemsPerPage}`
+    // const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=Reserve_price:greater_than:0${encodedCriteria}&page=${currentPage}&per_page=${itemsPerPage}`
+    const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=${encodedCriteria || "Reserve_price:greater_than:0"
+      }&page=${currentPage}&per_page=${itemsPerPage}`;
+
     console.log({ url })
     try {
       const response = await fetch(url, {
