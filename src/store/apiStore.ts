@@ -37,12 +37,12 @@ export const useApiStore = create<ApiStoreState>((set) => ({
     const criteriaParts: string[] = []
     if (filters.auctionStartDate) {
       criteriaParts.push(
-        `(Auction_start_date:greater_than:${filters.auctionStartDate})`
+        `&(Auction_start_date:greater_than:${filters.auctionStartDate})`
       )
     }
     if (filters.auctionEndDate) {
       criteriaParts.push(
-        `(Auction_end_date:less_than:${filters.auctionEndDate})`
+        `&(Auction_end_date:less_than:${filters.auctionEndDate})`
       )
     }
     if (filters.area) {
