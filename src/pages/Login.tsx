@@ -100,6 +100,7 @@ export default function Login() {
       setIsLoading(false)
       toast.success('Successfully logged in')
       localStorage.setItem('isLoggedin', 'true')
+      // @ts-ignore
       localStorage.setItem('user', JSON.stringify(userData?.data[0]))
       triggerAuthUpdate() // Dispatch event before navigation
 
