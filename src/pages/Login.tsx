@@ -5,18 +5,25 @@ import { triggerAuthUpdate } from '@/utils/auth'
 import { Image } from '@/utils/images'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { TailSpin } from 'react-loader-spinner'
 import { Link, useNavigate } from 'react-router-dom'
 
 const loginCode = generateLoginCode()
+
 export default function Login() {
   const accessToken = useAccessToken()
 
   const [loginEmail, setLoginEmail] = useState('')
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [loginCodeInput, setLoginCodeInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [userData, setUserData] = useState({})
+
   // triggerAuthUpdate
   const redirect = useNavigate()
+
   const handleEmailValidation = async () => {
+    // if (loginCodeInput) return
     if (!loginEmail) return
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     // Check if the email is valid
@@ -27,6 +34,7 @@ export default function Login() {
 
     // Check if the email is in the database
     try {
+      setIsLoading(true)
       const response = await fetch(
         `${API_BASE_URL}/crm/v7/Contacts/search?email=${loginEmail}`,
         {
@@ -39,46 +47,11 @@ export default function Login() {
       )
       const data = await response.json()
       if (data.data.length > 0) {
+        setUserData(data)
+        setIsLoading(false)
         setIsEmailValid(true)
+        handleCode(data)
         toast.success('Check your email for login code')
-        // Send put request - with login code and email
-        const constructedData = {
-          data: [
-            {
-              Login_code: loginCode,
-              email: loginEmail,
-            },
-          ],
-        }
-        const res = await fetch(
-          `${API_BASE_URL}/crm/v7/Contacts/${data.data[0].id}`,
-          {
-            method: 'PUT',
-            headers: {
-              Authorization: `Zoho-oauthtoken ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(constructedData),
-          }
-        )
-        const _data = await res.json()
-        console.log(_data)
-        // After sending put request with login code and user id
-        if (_data.data[0].status === 'success') {
-          if (loginCodeInput === loginCode) {
-            toast.success('Successfully logged in')
-            localStorage.setItem('isLoggedin', 'true')
-            localStorage.setItem('user', JSON.stringify(data.data[0]))
-            triggerAuthUpdate() // Dispatch event before navigation
-
-            setTimeout(() => {
-              redirect('/')
-            }, 100) // Small delay to ensure event dispatch
-          }
-        } else {
-          setIsEmailValid(false)
-          toast.error('Something went wrong')
-        }
       } else {
         setIsEmailValid(false)
         toast.error('Email not found')
@@ -88,9 +61,57 @@ export default function Login() {
     }
   }
 
+  const handleCode = async (data: any) => {
+    console.log(data)
+    // Send put request - with login code and email
+    const constructedData = {
+      data: [
+        {
+          Login_code: loginCode,
+          email: loginEmail,
+        },
+      ],
+    }
+    try {
+      // setIsLoading(true)
+      const res = await fetch(
+        `${API_BASE_URL}/crm/v7/Contacts/${data.data[0].id}`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Zoho-oauthtoken ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(constructedData),
+        }
+      )
+      const _data = await res.json()
+      if (_data.data[0].status !== 'success') {
+        toast.error('Something went wrong')
+        throw new Error('Response is not SUCCESS')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleAfterCodeSent = () => {
+    if (loginCodeInput === loginCode) {
+      setIsLoading(false)
+      toast.success('Successfully logged in')
+      localStorage.setItem('isLoggedin', 'true')
+      localStorage.setItem('user', JSON.stringify(userData?.data[0]))
+      triggerAuthUpdate() // Dispatch event before navigation
+
+      setTimeout(() => {
+        redirect('/')
+      }, 100) // Small delay to ensure event dispatch
+    }
+  }
+
   return (
     <>
-      <div className=' text-gray-900 flex justify-center'>
+      <div className='text-gray-900 flex justify-center'>
         <div className='max-w-screen-xl m-0 bg-white sm:rounded-lg flex justify-center flex-1'>
           <div className='lg:w-1/2 xl:w-5/12 sm:p-0'>
             <div className='mt-12 flex flex-col items-center'>
@@ -145,9 +166,31 @@ export default function Login() {
                   <button
                     className='mt-6 tracking-wide font-semibold bg-red-400 text-gray-100 w-full py-3 rounded-lg transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none'
                     type='submit'
-                    onClick={handleEmailValidation}
+                    onClick={
+                      loginCodeInput
+                        ? handleAfterCodeSent
+                        : handleEmailValidation
+                    }
+                    disabled={isLoading}
                   >
-                    <span className='ml-3'>Login</span>
+                    {isLoading ? (
+                      <div className='mx-auto flex'>
+                        <TailSpin
+                          visible={true}
+                          height='25'
+                          color='#fff'
+                          ariaLabel='tail-spin-loading'
+                          radius='1'
+                          wrapperStyle={{
+                            margin: 'auto',
+                            textAlign: 'center',
+                          }}
+                          wrapperClass=''
+                        />
+                      </div>
+                    ) : (
+                      <span className='ml-3'>Login</span>
+                    )}
                   </button>
                   <p className='text-center text-sm mt-3'>
                     Don't have an account?{' '}

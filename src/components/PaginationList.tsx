@@ -1,9 +1,10 @@
 import SingleHouse from '@/components/SingleHouse'
-
 import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
 import { Data } from '@/types'
 import { useEffect } from 'react'
+import { MagnifyingGlass } from 'react-loader-spinner'
+
 // import toast from 'react-hot-toast'
 
 const PaginatedList = () => {
@@ -12,7 +13,7 @@ const PaginatedList = () => {
   // const [totalItems, setTotalItems] = useState(0)
   // const itemsPerPage = 3
 
-  const { data, fetchData } = useApiStore()
+  const { data, fetchData, loading } = useApiStore()
   // const fetchTotalCount = async () => {
   //   if (!accessToken) return
 
@@ -48,21 +49,38 @@ const PaginatedList = () => {
   return (
     <>
       <div className='max-w-[1000px] w-full h-screen overflow-y-scroll px-2 md:px-5'>
-        <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-8 relative'>
-          {data ? (
-            data?.map((item: Data) => (
-              <SingleHouse key={item.Auction_id} data={item} />
-            ))
-          ) : (
-            <div className='flex h-full absolute top-14 left-[50%] transform -translate-x-1/2 -translate-y-1/2'>
-              <h1 className='text-xl md:text-4xl font-bold text-center text-gray-400'>
-                Nothing to show
-              </h1>
+        {loading ? (
+          <div className='mx-auto mt-10'>
+            <MagnifyingGlass
+              visible={true}
+              height='90'
+              width='90'
+              ariaLabel='magnifying-glass-loading'
+              wrapperStyle={{
+                margin: 'auto',
+              }}
+              wrapperClass='magnifying-glass-wrapper'
+              glassColor='#c0efff'
+              color='#e15b64'
+            />
+          </div>
+        ) : (
+          <>
+            <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-8 relative'>
+              {data ? (
+                data?.map((item: Data) => (
+                  <SingleHouse key={item.Auction_id} data={item} />
+                ))
+              ) : (
+                <div className='flex h-full absolute top-14 left-[50%] transform -translate-x-1/2 -translate-y-1/2'>
+                  <h1 className='text-xl md:text-4xl font-bold text-center text-gray-400'>
+                    Nothing to show
+                  </h1>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        {/* {data.length > 0 && (
+            {/* {data.length > 0 && (
         <Pagination className='mb-10'>
           <PaginationContent>
             <PaginationItem className='select-none'>
@@ -112,6 +130,8 @@ const PaginatedList = () => {
           </PaginationContent>
         </Pagination>
       )} */}
+          </>
+        )}
       </div>
     </>
   )
