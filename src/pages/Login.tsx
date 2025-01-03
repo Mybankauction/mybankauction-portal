@@ -118,7 +118,10 @@ export default function Login() {
             <div className='mt-12 flex flex-col items-center'>
               <h1 className='text-2xl xl:text-3xl font-extrabold'>Login</h1>
               <div className='w-full flex-1 mt-8'>
-                <div className='mx-auto w-full max-w-md'>
+                <form
+                  onSubmit={handleEmailValidation}
+                  className='mx-auto w-full max-w-md'
+                >
                   <div className=''>
                     <label htmlFor='email' className='text-sm mb-1 block'>
                       Email
@@ -199,7 +202,7 @@ export default function Login() {
                       Sign Up
                     </Link>
                   </p>
-                </div>
+                </form>
               </div>
             </div>
           </div>

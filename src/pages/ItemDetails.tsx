@@ -155,8 +155,8 @@ export default function ItemDetails() {
               <p>
                 {/* {data?.Bank_Name} Auctions for {data?.Property_Type} in{' '}
                 {data?.Area?.name ?? 'N/A'}, {data?.City} */}
-                Auction for {data?.Property_Type} in {data?.Area?.name ?? 'N/A'}
-                , {data?.City} for ₹{formatRupee(data?.Reserve_price! ?? '')}
+                Auction for {data?.Property_Type} in {data?.Area ?? 'N/A'},{' '}
+                {data?.City} for ₹{formatRupee(data?.Reserve_price! ?? '')}
               </p>
               <button
                 onClick={handleInterestedButtonClick}

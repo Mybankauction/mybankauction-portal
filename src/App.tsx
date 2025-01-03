@@ -25,7 +25,7 @@ export default function App() {
             <Route element={<Signup />} path='/signup' />
             <Route element={<NotFound />} path='*' />
           </Routes>
-          <hr className='my-16 border-gray-400 max-w-[80rem] mx-auto' />
+          <hr className='my-16 border-gray-200 max-w-[80rem] mx-auto' />
           <Footer />
         </BrowserRouter>
       </div>

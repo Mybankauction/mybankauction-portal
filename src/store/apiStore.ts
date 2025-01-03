@@ -4,7 +4,7 @@ import { create } from 'zustand'
 type Filters = {
   auctionStartDate?: string | null
   auctionEndDate?: string | null
-  area?: string
+  area?: string[]
   minPrice?: number
   maxPrice?: number
   propertyType?: string
@@ -22,7 +22,7 @@ type ApiStoreState = {
 
 export const useApiStore = create<ApiStoreState>((set) => ({
   filters: {} as Filters,
-  itemsPerPage: 300,
+  itemsPerPage: 9,
   data: [],
   loading: false,
   error: null,
@@ -46,9 +46,6 @@ export const useApiStore = create<ApiStoreState>((set) => ({
         `(Auction_end_date:less_than:${filters.auctionEndDate})`
       )
     }
-    if (filters.area) {
-      criteriaParts.push(`(Area:equals:${filters.area})`)
-    }
     if (filters.minPrice) {
       criteriaParts.push(`(Reserve_price:greater_than:${filters.minPrice})`)
     }
@@ -58,7 +55,10 @@ export const useApiStore = create<ApiStoreState>((set) => ({
     if (filters.propertyType) {
       criteriaParts.push(`(Property_Type:equals:${filters.propertyType})`)
     }
-
+    if (filters.area) {
+      const areaCriteria = `(Area:in:${filters.area.join(',')})`
+      criteriaParts.push(areaCriteria)
+    }
     const criteria = criteriaParts.join('and')
     const encodedCriteria = encodeURIComponent(criteria)
 

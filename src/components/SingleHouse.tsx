@@ -7,17 +7,17 @@ import PropertyIcon from './PropertyIcon'
 function PropertyImage(type: string) {
   switch (type) {
     case 'Land':
-      return Image.Land2
+      return Image.Land3
     case 'Flat':
       return Image.Flat
     case 'Land And Building':
-      return Image.Land2
+      return Image.LandAndBuilding
     case 'Plot':
-      return Image.Land2
+      return Image.Plot
     case 'House':
-      return Image.Flat
+      return Image.House
     default:
-      return Image.Land2
+      return Image.Plot
   }
 }
 
@@ -42,7 +42,7 @@ export default function SingleHouse({ data }: { data: Data }) {
               </div>
             </div>
             <div className='flex items-center justify-between text-gray-500 text-sm mt-2'>
-              <p className=''>{data.Area ? data.Area.name : 'N/A'}</p>
+              <p className=''>{data.Area ? data.Area : 'N/A'}</p>
               <p>{readableDate(data.Auction_start_date)}</p>
             </div>
           </div>
