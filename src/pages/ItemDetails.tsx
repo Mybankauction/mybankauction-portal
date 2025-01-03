@@ -151,22 +151,28 @@ export default function ItemDetails() {
       ) : (
         <>
           <div className='border p-4 bg-slate-100 rounded-md'>
-            <h1 className='text-2xl font-bold flex items-center justify-between'>
+            <div className='text-2xl font-bold flex items-center justify-between'>
               <p>
-                {data?.Bank_Name} Auctions for {data?.Property_Type} in{' '}
-                {data?.Area}, {data?.City}
+                {/* {data?.Bank_Name} Auctions for {data?.Property_Type} in{' '}
+                {data?.Area?.name ?? 'N/A'}, {data?.City} */}
+                Auction for {data?.Property_Type} in {data?.Area?.name ?? 'N/A'}
+                , {data?.City} for ₹{formatRupee(data?.Reserve_price! ?? '')}
               </p>
               <button
                 onClick={handleInterestedButtonClick}
                 disabled={isInterested}
+                className={`${
+                  isInterested ? 'bg-green-400' : 'bg-red-400'
+                } text-base text-white px-2 py-1 rounded font-normal text-nowrap`}
               >
-                <Heart
+                {/* <Heart
                   className='text-red-400'
                   fill={isInterested ? 'red' : 'white'}
                   size={30}
-                />
+                /> */}
+                {isInterested ? 'Interested' : "I'm interested"}
               </button>
-            </h1>
+            </div>
 
             <div className='flex items-center justify-between flex-wrap gap-5 mt-6'>
               <div className='flex items-center gap-x-2'>
@@ -210,10 +216,10 @@ export default function ItemDetails() {
                 <span className='font-bold'>Reserve Price:</span> ₹
                 {formatRupee(data?.Reserve_price ?? '')}
               </p>
-              <div>
+              {/* <div>
                 <span className='font-bold'>Contact Details :</span>
                 {data?.Contact_Details}
-              </div>
+              </div> */}
             </div>
           </div>
           {/*  */}

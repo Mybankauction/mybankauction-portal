@@ -4,6 +4,7 @@ import { useApiStore } from '@/store/apiStore'
 import { Data } from '@/types'
 import { useEffect } from 'react'
 import { MagnifyingGlass } from 'react-loader-spinner'
+import { ScrollArea } from './ui/scroll-area'
 
 // import toast from 'react-hot-toast'
 
@@ -48,7 +49,7 @@ const PaginatedList = () => {
 
   return (
     <>
-      <div className='max-w-[1000px] w-full h-screen overflow-y-scroll px-2 md:px-5'>
+      <ScrollArea className='max-w-[1000px] w-full h-screen no-scrollbar px-2 md:px-5'>
         {loading ? (
           <div className='mx-auto mt-10'>
             <MagnifyingGlass
@@ -66,7 +67,7 @@ const PaginatedList = () => {
           </div>
         ) : (
           <>
-            <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-8 relative'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8 relative'>
               {data ? (
                 data?.map((item: Data) => (
                   <SingleHouse key={item.Auction_id} data={item} />
@@ -132,7 +133,7 @@ const PaginatedList = () => {
       )} */}
           </>
         )}
-      </div>
+      </ScrollArea>
     </>
   )
 }

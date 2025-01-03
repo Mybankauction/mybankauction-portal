@@ -6,7 +6,7 @@ export default {
     container: {
       center: true,
       screens: {
-        lg: '1400px',
+        lg: '1500px',
       },
     },
     extend: {
@@ -28,6 +28,7 @@ export default {
           800: '#660000',
           900: '#330000',
         },
+        bgPrimary: '#f9f9f9',
       },
     },
   },

@@ -15,11 +15,11 @@ function NavLinks() {
   return (
     <ul className='hidden md:flex items-center gap-3'>
       {NAV_LINKS.map((item) => (
-        <a href={item.url} key={item.name}>
+        <Link to={item.url} key={item.name}>
           <li className='px-4 cursor-pointer font-outfit text-center'>
             {item.name}
           </li>
-        </a>
+        </Link>
       ))}
     </ul>
   )
@@ -56,8 +56,8 @@ export default function Header() {
     <header className='flex justify-between items-center  mb-5 rounded-md  py-3 px-5'>
       <Link to='/'>
         <div className='cursor-pointer flex items-center gap-3'>
-          <img src={Image.Logo} alt='Logo' width={70} className='min-w-10' />
-          <span className='text-primary font-bold hidden lg:block text-xl'>
+          <img src={Image.Logo} alt='Logo' width={50} className='min-w-10' />
+          <span className='text-primary font-bold hidden lg:block text-lg'>
             Mybankauction
           </span>
         </div>

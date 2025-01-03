@@ -1,16 +1,28 @@
+import { PROPERTY_TYPES } from '@/constants'
 import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
 import { formattedDate } from '@/utils'
 import { useState } from 'react'
 import { TailSpin } from 'react-loader-spinner'
 import Date from './Date'
+import PropertyIcon from './PropertyIcon'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
 
 export default function Filters() {
   const [auctionStartDate, setAuctionStartDate] = useState(null)
   const [auctionEndDate, setAuctionEndDate] = useState(null)
+  const [propertyType, setPropertyType] = useState<string | null>(null)
   const { filters, setFilters, fetchData, loading } = useApiStore()
   const accessToken = useAccessToken()
 
@@ -18,7 +30,10 @@ export default function Filters() {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const filters = Object.fromEntries(formData.entries())
-
+    if (Object.values(filters).every((value) => !value)) {
+      return
+    }
+    console.log({ filters })
     setFilters({
       ...filters,
       auctionStartDate: formattedDate(auctionStartDate!),
@@ -29,7 +44,7 @@ export default function Filters() {
   }
 
   return (
-    <section className='flex flex-wrap gap-4'>
+    <section className='flex flex-wrap gap-4 py-8 px-6 shadow border-gray-300 rounded max-w-[380px] bg-white'>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         {/* Area Input */}
         {/* <div className='grid w-full max-w-sm items-center gap-1.5'>
@@ -41,6 +56,33 @@ export default function Filters() {
             placeholder='e.g., HSR Layout, BTM Layout'
           />
         </div> */}
+        {/* Property Type */}
+        <Label htmlFor='propertyType'>Property Type</Label>
+        <Select
+          name='propertyType'
+          value={propertyType ?? undefined}
+          onValueChange={(value) => setPropertyType(value || null)}
+        >
+          <SelectTrigger className='' id='propertyType'>
+            <SelectValue placeholder='Select property' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {/* <SelectItem value='' disabled>
+                Select property type
+              </SelectItem> */}
+              {PROPERTY_TYPES.map((item) => (
+                <SelectItem key={item.value} value={item.value}>
+                  <div className='flex items-center gap-2'>
+                    <p>{PropertyIcon(item.value, 20)}</p>
+                    <p>{item.label}</p>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <hr className='border-gray-200 max-w-full my-1' />
         {/* Date Inputs */}
         <div>
           <Date
@@ -58,37 +100,43 @@ export default function Filters() {
             name='auctionEndDate'
           />
         </div>
+        <hr className='border-gray-200 max-w-full my-1 mt-2' />
         {/* Min Price */}
-        <div className='grid w-full max-w-sm items-center gap-1.5'>
+        <div>
           <Label htmlFor='minPrice'>Min Price</Label>
           <Input
             type='number'
             id='minPrice'
             name='minPrice'
             placeholder='Min price'
+            className='mt-1'
           />
         </div>
         {/* Max Price */}
-        <div className='grid w-full max-w-sm items-center gap-1.5'>
+        {/* grid w-full max-w-sm items-center gap-1.5 */}
+        <div>
           <Label htmlFor='maxPrice'>Max Price</Label>
           <Input
             type='number'
             id='maxPrice'
             name='maxPrice'
             placeholder='Max price'
+            className='mt-1'
           />
         </div>
         {filters.auctionEndDate ||
         filters.area ||
         filters.auctionStartDate ||
         filters.minPrice ||
-        filters.maxPrice ? (
+        filters.maxPrice ||
+        filters.propertyType ? (
           <Button
             variant='link'
-            className='inline max-w-fit px-0'
+            className='inline max-w-fit px-0 text-red-400'
             onClick={() => {
               setAuctionStartDate(null)
               setAuctionEndDate(null)
+              setPropertyType('')
               const form = document.querySelector('form')
               if (form) form.reset() // Reset form inputs
               setFilters({})
@@ -101,10 +149,11 @@ export default function Filters() {
         {/* Submit Button */}
         <button
           type='submit'
-          className='rounded bg-red-400 px-4 py-2 text-white'
+          className='rounded bg-red-400 px-4 py-2 text-white disabled:bg-red-600 disabled:cursor-not-allowed'
           disabled={loading}
         >
-          {loading ? (
+          Search
+          {/* {loading ? (
             <div className='mx-auto flex'>
               <TailSpin
                 visible={true}
@@ -121,7 +170,7 @@ export default function Filters() {
             </div>
           ) : (
             <>Search</>
-          )}
+          )} */}
         </button>
       </form>
     </section>

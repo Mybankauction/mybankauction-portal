@@ -7,6 +7,7 @@ type Filters = {
   area?: string
   minPrice?: number
   maxPrice?: number
+  propertyType?: string
 }
 
 type ApiStoreState = {
@@ -54,15 +55,18 @@ export const useApiStore = create<ApiStoreState>((set) => ({
     if (filters.maxPrice) {
       criteriaParts.push(`(Reserve_price:less_than:${filters.maxPrice})`)
     }
+    if (filters.propertyType) {
+      criteriaParts.push(`(Property_Type:equals:${filters.propertyType})`)
+    }
 
     const criteria = criteriaParts.join('and')
     const encodedCriteria = encodeURIComponent(criteria)
 
     // const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=Reserve_price:greater_than:0${encodedCriteria}&page=${currentPage}&per_page=${itemsPerPage}`
-    const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=${encodedCriteria || "Reserve_price:greater_than:0"
-      }&page=${currentPage}&per_page=${itemsPerPage}`;
+    const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=${
+      encodedCriteria || 'Reserve_price:greater_than:0'
+    }&page=${currentPage}&per_page=${itemsPerPage}`
 
-    console.log({ url })
     try {
       const response = await fetch(url, {
         headers: {

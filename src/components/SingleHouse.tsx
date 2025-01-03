@@ -1,26 +1,51 @@
 import { Data } from '@/types'
-import { formatRupee } from '@/utils'
+import { formatRupee, readableDate } from '@/utils'
+import { Image } from '@/utils/images'
 import { Link } from 'react-router-dom'
+import PropertyIcon from './PropertyIcon'
+
+function PropertyImage(type: string) {
+  switch (type) {
+    case 'Land':
+      return Image.Land2
+    case 'Flat':
+      return Image.Flat
+    case 'Land And Building':
+      return Image.Land2
+    case 'Plot':
+      return Image.Land2
+    case 'House':
+      return Image.Flat
+    default:
+      return Image.Land2
+  }
+}
 
 export default function SingleHouse({ data }: { data: Data }) {
   return (
     <Link key={data.Auction_id} to={`/properties/${data.Auction_id}`}>
-      <div className='bg-white shadow-md rounded-md overflow-hidden cursor-pointer'>
+      <div className='bg-white shadow rounded overflow-hidden cursor-pointer min-w-[310px]'>
         <img
-          src='https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+          src={PropertyImage(data.Property_Type)}
           alt={data.Account_Name}
           className='w-full h-52 object-cover'
         />
-        <div className='flex justify-between items-center p-3'>
-          <div>
-            <h2 className='text-lg font-semibold'>
-              ₹{formatRupee(data.Reserve_price)}
-              {/* <span className='text-sm font-normal'>/month</span> */}
-            </h2>
-            {/* <p className='font-bold'>{data.name}</p> */}
-            <p className='text-gray-500 text-sm'>{data.Area}</p>
+        <div className=' p-3'>
+          <div className=''>
+            <div className='flex items-center justify-between'>
+              <h2 className='font-semibold'>
+                ₹{formatRupee(data.Reserve_price)}
+              </h2>
+              <div className='flex gap-1'>
+                <p>{PropertyIcon(data.Property_Type, 22)}</p>
+                <p className='text-sm'>{data.Property_Type}</p>
+              </div>
+            </div>
+            <div className='flex items-center justify-between text-gray-500 text-sm mt-2'>
+              <p className=''>{data.Area ? data.Area.name : 'N/A'}</p>
+              <p>{readableDate(data.Auction_start_date)}</p>
+            </div>
           </div>
-          {/* {<span className='text-yellow-500 text-sm'>🪙1 Coin</span>} */}
         </div>
       </div>
     </Link>

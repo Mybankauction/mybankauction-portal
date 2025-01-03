@@ -34,7 +34,6 @@ export const convertToTimeZoneOffset = (
 }
 
 export const formattedDate = (date: string) => {
-  console.log(date)
   if (!date) return ''
   return new Date(date).toISOString().replace('.000Z', '+05:30')
 }
@@ -47,4 +46,10 @@ export function convertDateToReadableFormat(dateStr: any) {
 
 export function generateLoginCode() {
   return Math.floor(100000 + Math.random() * 900000).toString()
+}
+
+export function readableDate(dateStr: any) {
+  if (!dateStr) return
+  const date = parseISO(dateStr)
+  return format(date, 'dd MMM, yy') // Example: 10 Jan, 25
 }

@@ -43,7 +43,7 @@ export type Data = {
   Bank_account_in_which_Emd_to_be_remitted: any
   Location_Link: any
   Branch_Name: string
-  Area: string
+  Area: Area
   Super_built_up_area: any
   Kitchen: any
   State: string
@@ -108,4 +108,9 @@ export type ReviewProcess = {
   approve: boolean
   reject: boolean
   resubmit: boolean
+}
+
+export type Area = {
+  name: string
+  id: string
 }

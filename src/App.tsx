@@ -11,21 +11,24 @@ import Signup from './pages/Signup'
 
 export default function App() {
   return (
-    <div className='container px-3'>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route element={<ProtectedRoute />}>
-            <Route element={<Home />} path='/' />
-            <Route element={<ItemDetails />} path='/properties/:id' />
-            <Route element={<Account />} path='/account' />
-          </Route>
-          <Route element={<Login />} path='/login' />
-          <Route element={<Signup />} path='/signup' />
-          <Route element={<NotFound />} path='*' />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
+    <div className='bg-bgPrimary'>
+      <div className='container px-3 '>
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Home />} path='/' />
+              <Route element={<ItemDetails />} path='/properties/:id' />
+              <Route element={<Account />} path='/account' />
+            </Route>
+            <Route element={<Login />} path='/login' />
+            <Route element={<Signup />} path='/signup' />
+            <Route element={<NotFound />} path='*' />
+          </Routes>
+          <hr className='my-16 border-gray-400 max-w-[80rem] mx-auto' />
+          <Footer />
+        </BrowserRouter>
+      </div>
     </div>
   )
 }

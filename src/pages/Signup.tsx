@@ -136,7 +136,7 @@ export default function Signup() {
 
   return (
     <div className=' text-gray-900 flex justify-center'>
-      <div className='max-w-screen-xl bg-white sm:rounded-lg flex justify-center flex-1'>
+      <div className='max-w-screen-xl sm:rounded-lg flex justify-center flex-1'>
         <div className='lg:w-1/2 xl:w-5/12 sm:p-0'>
           <div className='flex flex-col items-center'>
             <h1 className='text-2xl xl:text-3xl font-extrabold'>Sign up</h1>
