@@ -106,9 +106,9 @@ export default function Login() {
       localStorage.setItem('user', JSON.stringify(userData?.data[0]))
       triggerAuthUpdate() // Dispatch event before navigation
 
-      setTimeout(() => {
-        redirect('/')
-      }, 100) // Small delay to ensure event dispatch
+      // setTimeout(() => {
+      redirect('/')
+      // }, 100) // Small delay to ensure event dispatch
     }
   }
 
