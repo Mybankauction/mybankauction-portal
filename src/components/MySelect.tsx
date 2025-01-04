@@ -11,21 +11,25 @@ import {
 } from './ui/select'
 
 export default function MySelect({ options, value, onChange, name }: any) {
-  const [selectedValue, setSelectedValue] = useState(value)
+  const [selectedValue, setSelectedValue] = useState(value || '')
 
   useEffect(() => {
-    setSelectedValue(value)
+    setSelectedValue(value || '')
   }, [value])
+
+  console.log({ value })
 
   return (
     <div>
-      <Label htmlFor='propertyType'>Property Type</Label>
+      <Label htmlFor={name}>Property Type</Label>
       <ShadcnSelect
-        name={name}
         value={selectedValue ?? ''}
-        onValueChange={onChange}
+        onValueChange={(newValue) => {
+          setSelectedValue(newValue) // Update local state
+          onChange(newValue) // Propagate change
+        }}
       >
-        <SelectTrigger id='propertyType'>
+        <SelectTrigger id={name}>
           <SelectValue placeholder='Select property' />
         </SelectTrigger>
         <SelectContent>
@@ -41,6 +45,9 @@ export default function MySelect({ options, value, onChange, name }: any) {
           </SelectGroup>
         </SelectContent>
       </ShadcnSelect>
+
+      {/* Hidden input to allow FormData to capture this field */}
+      <input type='hidden' name={name} value={selectedValue} />
     </div>
   )
 }

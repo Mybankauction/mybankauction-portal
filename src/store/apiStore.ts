@@ -53,6 +53,7 @@ export const useApiStore = create<ApiStoreState>((set) => ({
       criteriaParts.push(`(Reserve_price:less_than:${filters.maxPrice})`)
     }
     if (filters.propertyType) {
+      console.log(filters.propertyType)
       criteriaParts.push(`(Property_Type:equals:${filters.propertyType})`)
     }
     if (filters?.area && filters?.area?.length > 0) {

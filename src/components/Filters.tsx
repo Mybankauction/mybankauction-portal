@@ -12,10 +12,10 @@ import { Input } from './ui/input'
 import { Label } from './ui/label'
 
 export default function Filters() {
-  const [filteredOptions, setFilteredOptions] = useState([])
+  const [filteredAreaOptions, setFilteredAreaOptions] = useState([])
   const [auctionStartDate, setAuctionStartDate] = useState(null)
   const [auctionEndDate, setAuctionEndDate] = useState(null)
-  const [propertyType, setPropertyType] = useState<string | null>(null)
+  const [propertyType, setPropertyType] = useState<string | null>('')
   const { filters, setFilters, fetchData, loading } = useApiStore()
   const [selectedOptions, setSelectedOptions] = useState([])
   const accessToken = useAccessToken()
@@ -24,7 +24,7 @@ export default function Filters() {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const formFilters = Object.fromEntries(formData.entries())
-
+    console.log(formFilters)
     // @ts-ignore
     setFilters({
       ...formFilters,
@@ -37,7 +37,8 @@ export default function Filters() {
 
   // Area type
   const handleAreaSelectChange = (selected: any) => {
-    setSelectedOptions(selected ? selected : null)
+    setSelectedOptions(selected)
+    console.log(selected)
     // @ts-ignore
     // setFilters((prevFilters) => ({
     //   ...prevFilters,
@@ -48,19 +49,19 @@ export default function Filters() {
   // Area search field
   const handleAreaInputChange = (input: any) => {
     if (input.length >= 2) {
-      setFilteredOptions(
+      setFilteredAreaOptions(
         // @ts-ignore
         BANGALORE_AREAS.filter((option) =>
           option.label.toLowerCase().includes(input.toLowerCase())
         )
       )
     } else {
-      setFilteredOptions([])
+      setFilteredAreaOptions([])
     }
   }
 
   const handlePropertyTypeChange = (value: any) => {
-    setPropertyType(value) // Update state directly with the received value
+    setPropertyType(value || '') // Update state directly with the received value
   }
 
   const clearPropertyType = () => {
@@ -69,7 +70,7 @@ export default function Filters() {
     setFilters((prevFilters) => ({ ...prevFilters, propertyType: '' }))
     // if (accessToken) fetchData(accessToken, 1)
   }
-
+  console.log({ propertyType })
   return (
     <section className='flex flex-wrap gap-4 py-8 px-6 shadow border-gray-300 rounded  max-w-[380px] bg-white'>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4 w-[340px]'>
@@ -77,7 +78,7 @@ export default function Filters() {
         <div>
           <Label htmlFor='area'>Area</Label>
           <Select
-            options={filteredOptions}
+            options={filteredAreaOptions}
             isMulti
             placeholder='Type at least 2 characters...'
             onInputChange={handleAreaInputChange}
@@ -157,7 +158,7 @@ export default function Filters() {
           />
         </div>
         {filters.auctionEndDate ||
-        filters?.area?.length! > 0 ||
+        // filters?.area?.length! > 0 ||
         filters.auctionStartDate ||
         filters.minPrice ||
         filters.maxPrice ||

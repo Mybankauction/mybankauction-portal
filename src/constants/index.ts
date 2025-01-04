@@ -92,6 +92,7 @@ export const BANGALORE_AREAS = [
   { value: 'Nayandahalli', label: 'Nayandahalli' },
   { value: 'Rajajinagar', label: 'Rajajinagar' },
   { value: 'Dasanapura', label: 'Dasanapura' },
+  { value: 'Kalaburgi', label: 'Kalaburgi' },
   { value: 'Rajarajeshwari Nagar', label: 'Rajarajeshwari Nagar' },
   { value: 'Vijayanagar', label: 'Vijayanagar' },
   { value: 'Attibele', label: 'Attibele' },
