@@ -1,12 +1,13 @@
+import { Button } from '@/components/ui/button'
 import { API_BASE_URL, API_ENDPOINT } from '@/conf'
 import useAccessToken from '@/hooks/useAccessToken'
 import { Data } from '@/types'
 import { convertDateToReadableFormat, formatRupee } from '@/utils'
-import { CalendarDays, Heart, LandPlot, MapPin } from 'lucide-react'
+import { ArrowLeft, CalendarDays, Heart, LandPlot, MapPin } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { MagnifyingGlass } from 'react-loader-spinner'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 export default function ItemDetails() {
   const accessToken = useAccessToken()
@@ -132,7 +133,7 @@ export default function ItemDetails() {
   }, [])
 
   return (
-    <div className='max-w-[980px] mx-auto'>
+    <div className='max-w-[980px] mx-auto pb-20'>
       {isLoading ? (
         <div className='mx-auto mt-10 h-screen'>
           <MagnifyingGlass
@@ -149,7 +150,15 @@ export default function ItemDetails() {
           />
         </div>
       ) : (
-        <>
+        <div>
+          <div>
+            <a href={'/'}>
+              <Button variant={'link'} className='text-red-400'>
+                <ArrowLeft />
+                Go back
+              </Button>
+            </a>
+          </div>
           <div className='border p-4 bg-slate-100 rounded-md'>
             <div className='text-2xl font-bold flex items-center justify-between'>
               <p>
@@ -191,72 +200,112 @@ export default function ItemDetails() {
                 <p>
                   <CalendarDays />
                 </p>
-                <p>{convertDateToReadableFormat(data?.Auction_start_date)}</p>
+                <p>
+                  {data?.Auction_start_date
+                    ? convertDateToReadableFormat(data?.Auction_start_date)
+                    : 'N/A'}
+                </p>
               </div>
             </div>
           </div>
           {/*  */}
-          <div className='p-4 bg-slate-100 mt-5 rounded-md flex justify-between flex-wrap gap-5'>
-            <h1 className='font-bold text-xl pb-4'>Bank Details:</h1>
-            <div className='*:py-2'>
-              <div>
-                <span className='font-bold'>Bank Name:</span> {data?.Bank_Name}
+          <div className='p-4 bg-slate-100 mt-5 rounded-md justify-between flex-wrap gap-5'>
+            <h1 className='font-bold text-xl pb-4 underline'>Bank Details:</h1>
+            <div className='flex items-center gap-6 flex-wrap'>
+              <div className='*:py-2'>
+                <div>
+                  <span className='font-bold'>Bank Name:</span>{' '}
+                  {data?.Bank_Name}
+                </div>
+                <div>
+                  <span className='font-bold'>EMD:</span> ₹
+                  {formatRupee(data?.Earnest_Money_Deposit ?? '')}
+                </div>
+                <div>
+                  <span className='font-bold'>Branch Name:</span>{' '}
+                  {data?.Branch_Name}
+                </div>
               </div>
-              <div>
-                <span className='font-bold'>EMD:</span>{' '}
-                {formatRupee(data?.Earnest_Money_Deposit ?? '')}
+              <div className='*:py-2'>
+                <p>
+                  <span className='font-bold'>Reserve Price:</span> ₹
+                  {formatRupee(data?.Reserve_price ?? '')}
+                </p>
+                <p>
+                  <span className='font-bold'>Current Price: </span>₹
+                  {data?.Current_market_price
+                    ? formatRupee(data?.Current_market_price ?? '')
+                    : 'N/A'}
+                </p>
               </div>
-              <div>
-                <span className='font-bold'>Branch Name:</span>{' '}
-                {data?.Branch_Name}
-              </div>
-            </div>
-            <div className='*:py-2'>
-              <p>
-                <span className='font-bold'>Reserve Price:</span> ₹
-                {formatRupee(data?.Reserve_price ?? '')}
-              </p>
-              {/* <div>
-                <span className='font-bold'>Contact Details :</span>
-                {data?.Contact_Details}
-              </div> */}
             </div>
           </div>
           {/*  */}
-          <div className='p-4 bg-slate-100 mt-5 rounded-md flex justify-between flex-wrap gap-5 '>
-            <h1 className='font-bold text-xl pb-4'>Property Details:</h1>
-            <div className='*:py-2'>
-              <div>
-                <span className='font-bold'>Borrower Name:</span>{' '}
-                {data?.Borrower_Name}
+          <div className='p-4 bg-slate-100 mt-5 rounded-md justify-between gap-5 '>
+            <h1 className='font-bold text-xl pb-4 underline'>
+              Property Details:
+            </h1>
+            <div className='flex items-center gap-6 flex-wrap'>
+              <div className='*:py-2'>
+                <div>
+                  <span className='font-bold'>Borrower Name:</span>{' '}
+                  {data?.Borrower_Name}
+                </div>
+                <div>
+                  <span className='font-bold'>Asset Category:</span>{' '}
+                  {data?.Asset_Category}
+                </div>
+                <div>
+                  <span className='font-bold'>Property Type:</span>{' '}
+                  {data?.Property_Type}
+                </div>
+                <div>
+                  <span className='font-bold'>Auction Type:</span>{' '}
+                  {data?.Auction_Type}
+                </div>
               </div>
-              <div>
-                <span className='font-bold'>Asset Category:</span>{' '}
-                {data?.Asset_Category}
-              </div>
-              <div>
-                <span className='font-bold'>Property Type:</span>{' '}
-                {data?.Property_Type}
-              </div>
-              <div>
-                <span className='font-bold'>Auction Type:</span>{' '}
-                {data?.Auction_Type}
+              <div className='*:py-2'>
+                <p>
+                  <span className='font-bold'>Auction Start Time:</span>{' '}
+                  {data?.Auction_start_date
+                    ? convertDateToReadableFormat(data?.Auction_start_date)
+                    : 'N/A'}
+                </p>
+                <p>
+                  <span className='font-bold'>Auction End Time:</span>{' '}
+                  {convertDateToReadableFormat(data?.Auction_end_date)}
+                </p>
+                <p>
+                  <span className='font-bold'>
+                    Application Submission Date:
+                  </span>{' '}
+                  {convertDateToReadableFormat(
+                    data?.Last_date_to_submit_the_tender_form_for_theauction
+                  )}
+                </p>
               </div>
             </div>
-            <div className='*:py-2'>
+          </div>
+          {/* Description */}
+          <div className='p-4 bg-slate-100 mt-5 rounded-md justify-between flex-wrap gap-5 '>
+            <h1 className='font-bold text-xl pb-4 underline'>
+              Property Description:{' '}
+            </h1>
+
+            <p>
+              {data?.Property_Description
+                ? data.Property_Description
+                : 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dignissimos obcaecati praesentium magnam perferendis deserunt maxime aliquam iste facilis perspiciatis facere.'}
+            </p>
+            <div className='flex items-center justify-between *:py-2'>
               <p>
-                <span className='font-bold'>Auction Start Time:</span>{' '}
-                {convertDateToReadableFormat(data?.Auction_start_date)}
+                <span className='font-bold'>State:</span> {data?.State}
               </p>
               <p>
-                <span className='font-bold'>Auction End Time:</span>{' '}
-                {convertDateToReadableFormat(data?.Auction_end_date)}
+                <span className='font-bold'>City:</span> {data?.City}
               </p>
               <p>
-                <span className='font-bold'>Application Submission Date:</span>{' '}
-                {convertDateToReadableFormat(
-                  data?.Last_date_to_submit_the_tender_form_for_theauction
-                )}
+                <span className='font-bold'>Area:</span> {data?.Area}
               </p>
             </div>
           </div>
@@ -271,7 +320,7 @@ export default function ItemDetails() {
           />
         </a>
       </div> */}
-        </>
+        </div>
       )}
     </div>
   )

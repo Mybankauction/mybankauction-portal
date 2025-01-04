@@ -2,48 +2,47 @@ import { BANGALORE_AREAS, PROPERTY_TYPES } from '@/constants'
 import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
 import { formattedDate } from '@/utils'
-import { Image } from '@/utils/images'
 import { useState } from 'react'
-import Select from 'react-select'
 import Date from './Date'
-import MySelect from './MySelect'
+import MultiSelect from './MultiSelect'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 
 export default function Filters() {
   const [filteredAreaOptions, setFilteredAreaOptions] = useState([])
+  const [filteredPropertyTypeOptions, setFilteredPropertyTypeOptions] =
+    useState([])
   const [auctionStartDate, setAuctionStartDate] = useState(null)
   const [auctionEndDate, setAuctionEndDate] = useState(null)
-  const [propertyType, setPropertyType] = useState<string | null>('')
   const { filters, setFilters, fetchData, loading } = useApiStore()
-  const [selectedOptions, setSelectedOptions] = useState([])
+  const [selectedAreaOptions, setSelectedAreaOptions] = useState([])
+  const [selectedPropertyTypeOptions, setSelectedPropertyTypeOptions] =
+    useState([])
   const accessToken = useAccessToken()
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const formFilters = Object.fromEntries(formData.entries())
-    console.log(formFilters)
+    // console.log(formFilters)
     // @ts-ignore
     setFilters({
       ...formFilters,
       auctionStartDate: formattedDate(auctionStartDate!),
       auctionEndDate: formattedDate(auctionEndDate!),
-      area: selectedOptions.map((option: any) => option.value),
+      area: selectedAreaOptions.map((option: any) => option.value),
+      propertyType: selectedPropertyTypeOptions.map(
+        (option: any) => option.value
+      ),
     })
     if (accessToken) fetchData(accessToken, 1)
   }
 
   // Area type
   const handleAreaSelectChange = (selected: any) => {
-    setSelectedOptions(selected)
-    console.log(selected)
-    // @ts-ignore
-    // setFilters((prevFilters) => ({
-    //   ...prevFilters,
-    //   propertyType: selected?.value || '',
-    // }))
+    setSelectedAreaOptions(selected)
+    // console.log(selected)
   }
 
   // Area search field
@@ -60,61 +59,42 @@ export default function Filters() {
     }
   }
 
-  const handlePropertyTypeChange = (value: any) => {
-    setPropertyType(value || '') // Update state directly with the received value
+  // Property type
+  const handlePropertyTypeSelectChange = (selected: any) => {
+    setSelectedPropertyTypeOptions(selected)
+    // console.log(selected)
   }
 
-  const clearPropertyType = () => {
-    setPropertyType('')
-    // @ts-ignore
-    setFilters((prevFilters) => ({ ...prevFilters, propertyType: '' }))
-    // if (accessToken) fetchData(accessToken, 1)
-  }
-  console.log({ propertyType })
   return (
-    <section className='flex flex-wrap gap-4 py-8 px-6 shadow border-gray-300 rounded  max-w-[380px] bg-white'>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4 w-[340px]'>
+    <section className=' flex-wrap gap- py-3 px-6 shadow border-gray-300 rounded  max-w-[380px] bg-white'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-2 w-[340px]'>
         {/* Area Input */}
-        <div>
-          <Label htmlFor='area'>Area</Label>
-          <Select
-            options={filteredAreaOptions}
-            isMulti
-            placeholder='Type at least 2 characters...'
-            onInputChange={handleAreaInputChange}
-            onChange={handleAreaSelectChange}
-            isClearable
-            name='area'
-            value={selectedOptions}
-            id='area'
-            className='border-neutral-400 mt-2'
-          />
-        </div>
-        <hr className='border-gray-200 max-w-full my-1' />
+        <MultiSelect
+          options={filteredAreaOptions}
+          placeholder='Type at least 2 characters...'
+          onInputChange={handleAreaInputChange}
+          onChange={handleAreaSelectChange}
+          value={selectedAreaOptions}
+          name='area'
+          label='Area'
+          id='area'
+        />
+
+        <hr className='border-gray-200 max-w-full  my-2' />
 
         {/* Property Type */}
-        <div className='flex  items-center'>
-          <div className='flex-grow'>
-            <MySelect
-              options={PROPERTY_TYPES}
-              value={propertyType}
-              onChange={handlePropertyTypeChange}
-              name='propertyType'
-            />
-          </div>
-          {propertyType && (
-            <Button
-              variant='link'
-              size='icon'
-              onClick={clearPropertyType}
-              className='ml-2 mt-5'
-            >
-              <img src={Image.Cross} alt='Clear Property Type' />
-              {/* Add alt text */}
-            </Button>
-          )}
-        </div>
-        <hr className='border-gray-200 max-w-full my-1' />
+        <MultiSelect
+          // options={filteredPropertyTypeOptions}
+          options={PROPERTY_TYPES}
+          placeholder='Nothing selected'
+          // onInputChange={handlePropertyTypeInputChange}
+          onChange={handlePropertyTypeSelectChange}
+          value={selectedPropertyTypeOptions}
+          name='propertyType'
+          label='Property type'
+          id='propertyType'
+        />
+        <hr className='border-gray-200 max-w-full my-2' />
         {/* Date Inputs */}
         <div>
           <Date
@@ -134,7 +114,7 @@ export default function Filters() {
             label='Auction End Date'
           />
         </div>
-        <hr className='border-gray-200 max-w-full my-1 mt-2' />
+        <hr className='border-gray-200 max-w-full  my-2' />
         {/* Min Price */}
         <div>
           <Label htmlFor='minPrice'>Min Price</Label>
@@ -154,24 +134,24 @@ export default function Filters() {
             id='maxPrice'
             name='maxPrice'
             placeholder='Max price'
-            className='mt-1'
+            className=''
           />
         </div>
         {filters.auctionEndDate ||
-        // filters?.area?.length! > 0 ||
+        filters.area ||
         filters.auctionStartDate ||
         filters.minPrice ||
         filters.maxPrice ||
-        filters.propertyType ||
-        selectedOptions.length > 0 ? (
+        filters.propertyType ? (
+          // selectedAreaOptions.length > 0
           <Button
             variant='link'
             className='inline max-w-fit px-0 text-red-400'
             onClick={() => {
               setAuctionStartDate(null)
               setAuctionEndDate(null)
-              setPropertyType('')
-              setSelectedOptions([])
+              setSelectedPropertyTypeOptions([])
+              setSelectedAreaOptions([])
               const form = document.querySelector('form')
               if (form) form.reset() // Reset form inputs
               setFilters({})

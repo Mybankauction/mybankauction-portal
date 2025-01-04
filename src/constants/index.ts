@@ -106,7 +106,7 @@ export const BANGALORE_AREAS = [
   // Missing areas added:
   { value: 'Bagalur', label: 'Bagalur' },
   { value: 'Bannerghatta', label: 'Bannerghatta' },
-  { value: 'Belagavi', label: 'Belagavi' },
+  // { value: 'Belagavi', label: 'Belagavi' },
   { value: 'Bidarahalli', label: 'Bidarahalli' },
   { value: 'Cooke Town', label: 'Cooke Town' },
   { value: 'Cunningham Road', label: 'Cunningham Road' },

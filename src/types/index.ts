@@ -7,7 +7,10 @@ export type Data = {
   Furnishing: any
   Last_Activity_Time: any
   Asset_Category: string
+  Current_market_price: string
+  Property_Description: string
   state: string
+  Application_Submision_Date: string
   Auction_start_date: string
   Auction_end_date: string
   Download_sales_notice: string

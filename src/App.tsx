@@ -11,7 +11,7 @@ import Signup from './pages/Signup'
 
 export default function App() {
   return (
-    <div className='bg-bgPrimary'>
+    <div className=''>
       <div className='container px-3 '>
         <BrowserRouter>
           <Header />
@@ -25,8 +25,8 @@ export default function App() {
             <Route element={<Signup />} path='/signup' />
             <Route element={<NotFound />} path='*' />
           </Routes>
-          <hr className='my-16 border-gray-200 max-w-[80rem] mx-auto' />
-          <Footer />
+          {/* <hr className='my-16 border-gray-200 max-w-[80rem] mx-auto' /> */}
+          {/* <Footer /> */}
         </BrowserRouter>
       </div>
     </div>

@@ -30,21 +30,31 @@ export default function SingleHouse({ data }: { data: Data }) {
           alt={data.Account_Name}
           className='w-full h-52 object-cover'
         />
-        <div className=' p-3'>
-          <div className=''>
-            <div className='flex items-center justify-between'>
-              <h2 className='font-semibold'>
-                ₹{formatRupee(data.Reserve_price)}
-              </h2>
-              <div className='flex gap-1'>
-                <p>{PropertyIcon(data.Property_Type, 22)}</p>
-                <p className='text-sm'>{data.Property_Type}</p>
-              </div>
+        <div className='p-3'>
+          <div className='*:py-1 tracking-wide'>
+            {/* <div className='flex items-center justify-between'> */}
+            <p>
+              <span className='font-semibold'>Reserved Price: </span> ₹
+              {formatRupee(data.Reserve_price)}
+            </p>
+            <div className='flex gap-1'>
+              <p>
+                <span className='font-semibold'>Property Type: </span>{' '}
+              </p>
+              <p>{data.Property_Type}</p>
             </div>
-            <div className='flex items-center justify-between text-gray-500 text-sm mt-2'>
-              <p className=''>{data.Area ? data.Area : 'N/A'}</p>
-              <p>{readableDate(data.Auction_start_date)}</p>
-            </div>
+            {/* </div> */}
+            {/* {PropertyIcon(data.Property_Type, 22)} */}
+            {/* <div className='flex items-center justify-between text-gray-500 text-sm mt-2'> */}
+            <p className=''>
+              <span className='font-semibold'>Area: </span>
+              {data.Area ? data.Area : 'N/A'}
+            </p>
+            <p>
+              <span className='font-semibold'>Auction start: </span>
+              {readableDate(data.Auction_start_date)}
+            </p>
+            {/* </div> */}
           </div>
         </div>
       </div>

@@ -7,24 +7,14 @@ import { MagnifyingGlass } from 'react-loader-spinner'
 import { ScrollArea } from './ui/scroll-area'
 
 import { API_BASE_URL, API_ENDPOINT } from '@/conf'
-import { cn } from '@/lib/utils'
-import toast from 'react-hot-toast'
 import { Button } from './ui/button'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from './ui/pagination'
 
 const PaginatedList = () => {
   const accessToken = useAccessToken()
   const [currentPage, setCurrentPage] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
 
-  const { data, fetchData, loading, itemsPerPage } = useApiStore()
+  const { data, fetchData, loading, itemsPerPage, filters } = useApiStore()
   const fetchTotalCount = async () => {
     if (!accessToken) return
 
@@ -44,6 +34,11 @@ const PaginatedList = () => {
     }
   }
 
+  const handleLoadMore = () => {
+    fetchData(accessToken, currentPage + 1)
+    setCurrentPage((prevPage) => prevPage + 1)
+  }
+
   useEffect(() => {
     fetchTotalCount()
   }, [accessToken])
@@ -54,7 +49,17 @@ const PaginatedList = () => {
 
   const totalPages = Math.ceil(totalItems / itemsPerPage)
 
-  // console.log({ totalItems }, { totalPages })
+  const anyFiltersApplied = () => {
+    return (
+      filters.auctionStartDate ||
+      filters.auctionEndDate ||
+      (filters.area && filters.area.length > 0) ||
+      filters.minPrice ||
+      filters.maxPrice ||
+      (filters.propertyType && filters.propertyType.length > 0)
+    )
+  }
+
   return (
     <div className='max-w-[1000px] w-full min-h-[300px] h-[calc(100vh-100px)] overflow-y-scroll px-2 md:px-5'>
       {loading ? (
@@ -87,58 +92,19 @@ const PaginatedList = () => {
       )}
 
       {/* Pagination */}
-      {!loading && data && data?.length > 0 && (
-        <div className='mt-8'>
-          <Pagination className='my-10 max-w-[1000px] w-full mx-auto'>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  className={cn({
-                    'pointer-events-none cursor-not-allowed text-gray-400':
-                      currentPage === 1,
-                    'cursor-pointer': currentPage > 1,
-                  })}
-                />
-              </PaginationItem>
-
-              {Array.from({ length: totalPages }, (_, index) => (
-                <PaginationItem key={index}>
-                  <PaginationLink
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setCurrentPage(index + 1)
-                    }}
-                    className={cn('rounded-full', {
-                      'bg-red-400 text-white': currentPage === index + 1,
-                      'text-gray-700': currentPage !== index + 1,
-                    })}
-                  >
-                    {index + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-
-              <PaginationItem>
-                <PaginationNext
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }}
-                  className={cn({
-                    'pointer-events-none cursor-not-allowed text-gray-400':
-                      currentPage === totalPages,
-                    'cursor-pointer': currentPage < totalPages,
-                  })}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
+      {!loading &&
+        data?.length! > 0 &&
+        currentPage < totalPages &&
+        !anyFiltersApplied() && (
+          <div>
+            <Button
+              className='bg-red-400 block mx-auto hover:bg-red-600'
+              onClick={handleLoadMore}
+            >
+              Load more
+            </Button>
+          </div>
+        )}
     </div>
   )
 }

@@ -7,7 +7,7 @@ type Filters = {
   area?: string[]
   minPrice?: number
   maxPrice?: number
-  propertyType?: string
+  propertyType?: string[]
 }
 
 type ApiStoreState = {
@@ -22,7 +22,7 @@ type ApiStoreState = {
 
 export const useApiStore = create<ApiStoreState>((set) => ({
   filters: {} as Filters,
-  itemsPerPage: 9,
+  itemsPerPage: 15,
   data: [],
   loading: false,
   error: null,
@@ -52,9 +52,11 @@ export const useApiStore = create<ApiStoreState>((set) => ({
     if (filters.maxPrice) {
       criteriaParts.push(`(Reserve_price:less_than:${filters.maxPrice})`)
     }
-    if (filters.propertyType) {
-      console.log(filters.propertyType)
-      criteriaParts.push(`(Property_Type:equals:${filters.propertyType})`)
+    if (filters?.propertyType && filters.propertyType.length > 0) {
+      const _propertyType = `(Property_Type:in:${filters.propertyType.join(
+        ','
+      )})`
+      criteriaParts.push(_propertyType)
     }
     if (filters?.area && filters?.area?.length > 0) {
       const areaCriteria = `(Area:in:${filters.area.join(',')})`
