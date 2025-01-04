@@ -1,5 +1,6 @@
 import arrowIcon from '@/assets/arrow-icon.svg'
 import burgerMenu from '@/assets/burger-menu.svg'
+import cross from '@/assets/cross.svg'
 import flat from '@/assets/flat.jpg'
 import houseRealEstate from '@/assets/house-real-estate.svg'
 import house from '@/assets/house.jpeg'
@@ -20,6 +21,7 @@ export const Image = {
   Land2: land2,
   Land3: land3,
   Plot: plot,
+  Cross: cross,
   House: house,
   LandAndBuilding: landAndBuilding,
 }

@@ -33,7 +33,7 @@ export const useApiStore = create<ApiStoreState>((set) => ({
     set({ loading: true, error: null })
 
     const { filters, itemsPerPage } = useApiStore.getState()
-
+    console.log({ filters })
     // Construct criteria
     const criteriaParts: string[] = []
     if (filters.auctionStartDate) {
@@ -55,7 +55,7 @@ export const useApiStore = create<ApiStoreState>((set) => ({
     if (filters.propertyType) {
       criteriaParts.push(`(Property_Type:equals:${filters.propertyType})`)
     }
-    if (filters.area) {
+    if (filters?.area && filters?.area?.length > 0) {
       const areaCriteria = `(Area:in:${filters.area.join(',')})`
       criteriaParts.push(areaCriteria)
     }

@@ -2,26 +2,16 @@ import { BANGALORE_AREAS, PROPERTY_TYPES } from '@/constants'
 import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
 import { formattedDate } from '@/utils'
+import { Image } from '@/utils/images'
 import { useState } from 'react'
-import { TailSpin } from 'react-loader-spinner'
 import Select from 'react-select'
 import Date from './Date'
-import PropertyIcon from './PropertyIcon'
+import MySelect from './MySelect'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
-import {
-  Select as DateSelect,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select'
 
 export default function Filters() {
-  const [inputValue, setInputValue] = useState('')
   const [filteredOptions, setFilteredOptions] = useState([])
   const [auctionStartDate, setAuctionStartDate] = useState(null)
   const [auctionEndDate, setAuctionEndDate] = useState(null)
@@ -34,29 +24,29 @@ export default function Filters() {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const formFilters = Object.fromEntries(formData.entries())
-    console.log(filters)
+
     // @ts-ignore
     setFilters({
       ...formFilters,
       auctionStartDate: formattedDate(auctionStartDate!),
       auctionEndDate: formattedDate(auctionEndDate!),
-      area: selectedOptions.map((option: any) => option.value), // Ensure area is correctly set
+      area: selectedOptions.map((option: any) => option.value),
     })
     if (accessToken) fetchData(accessToken, 1)
   }
 
-  const handleSelectChange = (selected: any) => {
-    const newSelectedOptions = selected || []
-    setSelectedOptions(newSelectedOptions)
+  // Area type
+  const handleAreaSelectChange = (selected: any) => {
+    setSelectedOptions(selected ? selected : null)
     // @ts-ignore
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      area: newSelectedOptions.map((option: any) => option.value),
-    }))
+    // setFilters((prevFilters) => ({
+    //   ...prevFilters,
+    //   propertyType: selected?.value || '',
+    // }))
   }
 
-  const handleInputChange = (input: any) => {
-    setInputValue(input)
+  // Area search field
+  const handleAreaInputChange = (input: any) => {
     if (input.length >= 2) {
       setFilteredOptions(
         // @ts-ignore
@@ -68,7 +58,18 @@ export default function Filters() {
       setFilteredOptions([])
     }
   }
-  // console.log({ inputValue })
+
+  const handlePropertyTypeChange = (value: any) => {
+    setPropertyType(value) // Update state directly with the received value
+  }
+
+  const clearPropertyType = () => {
+    setPropertyType('')
+    // @ts-ignore
+    setFilters((prevFilters) => ({ ...prevFilters, propertyType: '' }))
+    // if (accessToken) fetchData(accessToken, 1)
+  }
+
   return (
     <section className='flex flex-wrap gap-4 py-8 px-6 shadow border-gray-300 rounded  max-w-[380px] bg-white'>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4 w-[340px]'>
@@ -79,11 +80,11 @@ export default function Filters() {
             options={filteredOptions}
             isMulti
             placeholder='Type at least 2 characters...'
-            onInputChange={handleInputChange}
-            onChange={handleSelectChange} // This handles the selected values
+            onInputChange={handleAreaInputChange}
+            onChange={handleAreaSelectChange}
             isClearable
-            name='area' // Important for FormData binding
-            value={selectedOptions} // Bind selected options to state
+            name='area'
+            value={selectedOptions}
             id='area'
             className='border-neutral-400 mt-2'
           />
@@ -91,31 +92,27 @@ export default function Filters() {
         <hr className='border-gray-200 max-w-full my-1' />
 
         {/* Property Type */}
-        <Label htmlFor='propertyType'>Property Type</Label>
-        <DateSelect
-          name='propertyType'
-          value={propertyType ?? undefined}
-          onValueChange={(value) => setPropertyType(value || null)}
-        >
-          <SelectTrigger className='' id='propertyType'>
-            <SelectValue placeholder='Select property' />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {/* <SelectItem value='' disabled>
-                Select property type
-              </SelectItem> */}
-              {PROPERTY_TYPES.map((item) => (
-                <SelectItem key={item.value} value={item.value}>
-                  <div className='flex items-center gap-2'>
-                    <p>{PropertyIcon(item.value, 20)}</p>
-                    <p>{item.label}</p>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </DateSelect>
+        <div className='flex  items-center'>
+          <div className='flex-grow'>
+            <MySelect
+              options={PROPERTY_TYPES}
+              value={propertyType}
+              onChange={handlePropertyTypeChange}
+              name='propertyType'
+            />
+          </div>
+          {propertyType && (
+            <Button
+              variant='link'
+              size='icon'
+              onClick={clearPropertyType}
+              className='ml-2 mt-5'
+            >
+              <img src={Image.Cross} alt='Clear Property Type' />
+              {/* Add alt text */}
+            </Button>
+          )}
+        </div>
         <hr className='border-gray-200 max-w-full my-1' />
         {/* Date Inputs */}
         <div>
@@ -149,7 +146,6 @@ export default function Filters() {
           />
         </div>
         {/* Max Price */}
-        {/* grid w-full max-w-sm items-center gap-1.5 */}
         <div>
           <Label htmlFor='maxPrice'>Max Price</Label>
           <Input
@@ -161,7 +157,7 @@ export default function Filters() {
           />
         </div>
         {filters.auctionEndDate ||
-        filters.area ||
+        filters?.area?.length! > 0 ||
         filters.auctionStartDate ||
         filters.minPrice ||
         filters.maxPrice ||
@@ -191,24 +187,6 @@ export default function Filters() {
           disabled={loading}
         >
           Search
-          {/* {loading ? (
-            <div className='mx-auto flex'>
-              <TailSpin
-                visible={true}
-                height='25'
-                color='#fff'
-                ariaLabel='tail-spin-loading'
-                radius='1'
-                wrapperStyle={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-                wrapperClass=''
-              />
-            </div>
-          ) : (
-            <>Search</>
-          )} */}
         </button>
       </form>
     </section>
