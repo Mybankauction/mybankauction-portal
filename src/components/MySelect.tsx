@@ -29,7 +29,7 @@ export default function MySelect({ options, value, onChange, name }: any) {
           onChange(newValue) // Propagate change
         }}
       >
-        <SelectTrigger id={name}>
+        <SelectTrigger id={name} className='mt-2'>
           <SelectValue placeholder='Select property' />
         </SelectTrigger>
         <SelectContent>

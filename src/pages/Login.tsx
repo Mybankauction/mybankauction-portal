@@ -54,9 +54,11 @@ export default function Login() {
         toast.success('Check your email for login code')
       } else {
         setIsEmailValid(false)
+        setIsLoading(false)
         toast.error('Email not found')
       }
     } catch (error) {
+      setIsLoading(false)
       toast.error('Email not found')
     }
   }
