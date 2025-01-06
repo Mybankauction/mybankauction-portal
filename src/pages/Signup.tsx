@@ -3,19 +3,17 @@ import { generateReferralCode } from '@/utils'
 import { registerUser, verifyRefCode } from '@/utils/api'
 import { triggerAuthUpdate } from '@/utils/auth'
 import { Image } from '@/utils/images'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 
 export default function Signup() {
-  const code = generateReferralCode()
-
   const [user, setUser] = useState({
     Name1: '',
     Phone: '',
     Email: '',
     // password: '',
-    referral_id: code,
+    referral_id: '',
     refCode: '',
     referred_by: '',
   })
@@ -134,6 +132,38 @@ export default function Signup() {
     }
   }
 
+  useEffect(() => {
+    if (!accessToken) return
+
+    const generateUniqueReferralCode = async () => {
+      let isUnique = false
+      let uniqueCode = ''
+
+      while (!isUnique) {
+        try {
+          // Generate or set a referral code
+          uniqueCode = generateReferralCode()
+
+          // Verify the code
+          const response = await verifyRefCode(uniqueCode, accessToken)
+
+          // Check if the code is unique
+          if (!response?.data?.length) {
+            isUnique = true // Exit the loop
+          }
+        } catch (error) {
+          console.error('Error verifying referral code: ', error)
+          isUnique = true // Fallback: Exit the loop on error
+        }
+      }
+
+      // Set the referral ID once a unique code is found
+      setUser((prevUser) => ({ ...prevUser, referral_id: uniqueCode }))
+    }
+
+    generateUniqueReferralCode()
+  }, [accessToken])
+
   return (
     <div className=' text-gray-900 flex justify-center'>
       <div className='max-w-screen-xl sm:rounded-lg flex justify-center flex-1'>
@@ -201,7 +231,7 @@ export default function Signup() {
                 </div> */}
                 <div className='mt-5'>
                   <label htmlFor='refCode' className='text-sm mb-1 block'>
-                    Referral Code (optional)
+                    Referral code (optional)
                   </label>
                   <input
                     className='w-full px-4 py-4 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
