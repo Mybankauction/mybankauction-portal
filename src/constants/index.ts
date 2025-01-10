@@ -139,4 +139,10 @@ export const BANGALORE_AREAS = [
   { value: 'Varthur Hobli', label: 'Varthur Hobli' },
   { value: 'Vasanth Nagar', label: 'Vasanth Nagar' },
   { value: 'Welworth City', label: 'Welworth City' },
+  // Newly added
+  { value: 'Belgaum', label: 'Belgaum' },
+  { value: 'Raichur', label: 'Raichur' },
+  { value: 'Dharwad', label: 'Dharwad' },
+  { value: 'Hubli', label: 'Hubli' },
+  { value: 'Davangere', label: 'Davangere' },
 ]
