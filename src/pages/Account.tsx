@@ -40,9 +40,13 @@ export default function Account() {
         <p>Email</p>
         <p className='text-2xl'>{user?.Email || 'NA'}</p>
       </div>
-      <div className='my-10'>
+      <div className='mt-10'>
         <p>Phone Number</p>
         <p className='text-2xl'>{user?.Phone || 'NA'}</p>
+      </div>
+      <div className='my-10'>
+        <p>Referral Id</p>
+        <p className='text-2xl'>{user?.referral_id || 'NA'}</p>
       </div>
       <div>
         <button
