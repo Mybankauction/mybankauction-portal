@@ -1,14 +1,21 @@
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { defineConfig } from 'vite'
+import sitemap from 'vite-plugin-sitemap'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    sitemap({
+      hostname: 'https://mybankauction.com',
+    }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
+
   // server: {
   // proxy: {
   //   // Proxying '/zoho' to local serverless function during development
