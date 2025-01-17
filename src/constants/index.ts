@@ -44,7 +44,6 @@ export const BANGALORE_AREAS = [
   { value: 'KR Puram', label: 'KR Puram' },
   { value: 'Anekal', label: 'Anekal' },
   { value: 'Begur', label: 'Begur' },
-  { value: 'Kamakshipalya', label: 'Kamakshipalya' },
   { value: 'Chikkaballapura', label: 'Chikkaballapura' },
   { value: 'Kengeri', label: 'Kengeri' },
   { value: 'Hanumanthanagar', label: 'Hanumanthanagar' },
