@@ -88,7 +88,7 @@ export default function ItemDetails() {
       data: [
         {
           Deal_Name: `${acc.Account_Name}-${userName}`,
-          Stage: 'Qualification',
+          Stage: 'Physical Property Scan',
           Account_Name: {
             id: acc.id,
           },
