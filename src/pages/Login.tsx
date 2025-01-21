@@ -6,13 +6,13 @@ import { Image } from '@/utils/images'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { TailSpin } from 'react-loader-spinner'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 const loginCode = generateLoginCode()
 
 export default function Login() {
   const accessToken = useAccessToken()
-
+  const [searchParams] = useSearchParams()
   const [loginEmail, setLoginEmail] = useState('')
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [loginCodeInput, setLoginCodeInput] = useState('')
@@ -105,9 +105,10 @@ export default function Login() {
       // @ts-ignore
       localStorage.setItem('user', JSON.stringify(userData?.data[0]))
       triggerAuthUpdate() // Dispatch event before navigation
-
+      // Extract the `redirect` parameter from the query string
+      const redirectPath = searchParams.get('redirect') || '/' // Default to home if no redirect
       // setTimeout(() => {
-      redirect('/')
+      redirect(redirectPath)
       // }, 100) // Small delay to ensure event dispatch
     }
   }
