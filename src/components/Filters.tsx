@@ -2,54 +2,82 @@ import { BANGALORE_AREAS, PROPERTY_TYPES } from '@/constants'
 import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
 import { formattedDate } from '@/utils'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Date from './Date'
 import MultiSelect from './MultiSelect'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 
+type AreaOption = {
+  value: string
+  label: string
+}
+
+type PropertyTypeOption = {
+  value: string
+  label: string
+}
+
 export default function Filters() {
-  const [filteredAreaOptions, setFilteredAreaOptions] = useState([])
-  const [filteredPropertyTypeOptions, setFilteredPropertyTypeOptions] =
-    useState([])
-  const [auctionStartDate, setAuctionStartDate] = useState(null)
-  const [auctionEndDate, setAuctionEndDate] = useState(null)
+  const [filteredAreaOptions, setFilteredAreaOptions] = useState<AreaOption[]>(
+    []
+  )
+  const [auctionStartDate, setAuctionStartDate] = useState<string | null>(null)
+  const [auctionEndDate, setAuctionEndDate] = useState<string | null>(null)
   const { filters, setFilters, fetchData, loading } = useApiStore()
-  const [selectedAreaOptions, setSelectedAreaOptions] = useState([])
+  const [selectedAreaOptions, setSelectedAreaOptions] = useState<AreaOption[]>(
+    []
+  )
   const [selectedPropertyTypeOptions, setSelectedPropertyTypeOptions] =
-    useState([])
+    useState<PropertyTypeOption[]>([])
   const accessToken = useAccessToken()
+  const [minPrice, setMinPrice] = useState<string>('')
+  const [maxPrice, setMaxPrice] = useState<string>('')
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    const formFilters = Object.fromEntries(formData.entries())
-    // console.log(formFilters)
     // @ts-ignore
+    const formFilters = Object.fromEntries(formData.entries()) as Filters
+
     setFilters({
       ...formFilters,
       auctionStartDate: formattedDate(auctionStartDate!),
       auctionEndDate: formattedDate(auctionEndDate!),
-      area: selectedAreaOptions.map((option: any) => option.value),
-      propertyType: selectedPropertyTypeOptions.map(
-        (option: any) => option.value
-      ),
+      area: selectedAreaOptions.map((option) => option.value),
+      propertyType: selectedPropertyTypeOptions.map((option) => option.value),
+      minPrice: formFilters.minPrice
+        ? parseInt(formFilters.minPrice as string)
+        : null,
+      maxPrice: formFilters.maxPrice
+        ? parseInt(formFilters.maxPrice as string)
+        : null,
     })
     if (accessToken) fetchData(accessToken, 1)
   }
 
+  const handleClearFilters = async () => {
+    setAuctionStartDate(null)
+    setAuctionEndDate(null)
+    setSelectedPropertyTypeOptions([])
+    setSelectedAreaOptions([])
+    setMinPrice('')
+    setMaxPrice('')
+    setFilters({})
+    localStorage.removeItem('apiStore')
+    if (accessToken) fetchData(accessToken, 1)
+  }
+
   // Area type
-  const handleAreaSelectChange = (selected: any) => {
+  const handleAreaSelectChange = (selected: AreaOption[]) => {
     setSelectedAreaOptions(selected)
-    // console.log(selected)
   }
 
   // Area search field
-  const handleAreaInputChange = (input: any) => {
+  const handleAreaInputChange = (input: string) => {
     if (input.length >= 2) {
       setFilteredAreaOptions(
-        // @ts-ignore
         BANGALORE_AREAS.filter((option) =>
           option.label.toLowerCase().includes(input.toLowerCase())
         )
@@ -59,10 +87,30 @@ export default function Filters() {
     }
   }
 
+  useEffect(() => {
+    if (filters) {
+      setSelectedAreaOptions(
+        filters.area?.map((area) => ({
+          value: area,
+          label: area,
+        })) || []
+      )
+      setSelectedPropertyTypeOptions(
+        filters.propertyType?.map((type) => ({
+          value: type,
+          label: type,
+        })) || []
+      )
+      setAuctionStartDate(filters.auctionStartDate || null)
+      setAuctionEndDate(filters.auctionEndDate || null)
+      setMinPrice(filters.minPrice?.toString() || '')
+      setMaxPrice(filters.maxPrice?.toString() || '')
+    }
+  }, [filters])
+
   // Property type
-  const handlePropertyTypeSelectChange = (selected: any) => {
+  const handlePropertyTypeSelectChange = (selected: PropertyTypeOption[]) => {
     setSelectedPropertyTypeOptions(selected)
-    // console.log(selected)
   }
 
   return (
@@ -84,10 +132,8 @@ export default function Filters() {
 
         {/* Property Type */}
         <MultiSelect
-          // options={filteredPropertyTypeOptions}
           options={PROPERTY_TYPES}
           placeholder='Nothing selected'
-          // onInputChange={handlePropertyTypeInputChange}
           onChange={handlePropertyTypeSelectChange}
           value={selectedPropertyTypeOptions}
           name='propertyType'
@@ -124,6 +170,8 @@ export default function Filters() {
             name='minPrice'
             placeholder='Min price'
             className='mt-1'
+            value={minPrice} // Add this line
+            onChange={(e) => setMinPrice(e.target.value)}
           />
         </div>
         {/* Max Price */}
@@ -135,6 +183,8 @@ export default function Filters() {
             name='maxPrice'
             placeholder='Max price'
             className=''
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
           />
         </div>
         {filters.auctionEndDate ||
@@ -147,16 +197,7 @@ export default function Filters() {
           <Button
             variant='link'
             className='inline max-w-fit px-0 text-red-400'
-            onClick={() => {
-              setAuctionStartDate(null)
-              setAuctionEndDate(null)
-              setSelectedPropertyTypeOptions([])
-              setSelectedAreaOptions([])
-              const form = document.querySelector('form')
-              if (form) form.reset() // Reset form inputs
-              setFilters({})
-              if (accessToken) fetchData(accessToken, 1) // Fetch default data
-            }}
+            onClick={handleClearFilters}
           >
             Clear Filters
           </Button>

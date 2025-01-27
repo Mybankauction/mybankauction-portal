@@ -1,5 +1,6 @@
 import { API_BASE_URL, API_ENDPOINT } from '@/conf'
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 type Filters = {
   auctionStartDate?: string | null
@@ -20,76 +21,88 @@ type ApiStoreState = {
   fetchData: (accessToken: string, currentPage: any) => Promise<void>
 }
 
-export const useApiStore = create<ApiStoreState>((set) => ({
-  filters: {} as Filters,
-  itemsPerPage: 15,
-  data: [],
-  loading: false,
-  error: null,
+const persistConfig = {
+  name: 'apiStore',
+  getStorage: () => localStorage,
+}
 
-  setFilters: (filters: Filters) => set({ filters }),
+export const useApiStore = create<ApiStoreState>()(
+  persist(
+    (set, get) => ({
+      filters: {} as Filters,
+      itemsPerPage: 21,
+      data: null,
+      loading: false,
+      error: null,
 
-  fetchData: async (accessToken: string, currentPage: any) => {
-    set({ loading: true, error: null })
+      setFilters: (filters: Filters) => set({ filters }),
 
-    const { filters, itemsPerPage } = useApiStore.getState()
-    console.log({ filters })
-    // Construct criteria
-    const criteriaParts: string[] = []
-    if (filters.auctionStartDate) {
-      criteriaParts.push(
-        `(Auction_start_date:greater_than:${filters.auctionStartDate})`
-      )
-    }
-    if (filters.auctionEndDate) {
-      criteriaParts.push(
-        `(Auction_end_date:less_than:${filters.auctionEndDate})`
-      )
-    }
-    if (filters.minPrice) {
-      criteriaParts.push(`(Reserve_price:greater_than:${filters.minPrice})`)
-    }
-    if (filters.maxPrice) {
-      criteriaParts.push(`(Reserve_price:less_than:${filters.maxPrice})`)
-    }
-    if (filters?.propertyType && filters.propertyType.length > 0) {
-      const _propertyType = `(Property_Type:in:${filters.propertyType.join(
-        ','
-      )})`
-      criteriaParts.push(_propertyType)
-    }
-    if (filters?.area && filters?.area?.length > 0) {
-      const areaCriteria = `(Area:in:${filters.area.join(',')})`
-      criteriaParts.push(areaCriteria)
-    }
-    const criteria = criteriaParts.join('and')
-    const encodedCriteria = encodeURIComponent(criteria)
+      fetchData: async (accessToken: string, currentPage: number) => {
+        set({ loading: true, error: null })
 
-    // const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=Reserve_price:greater_than:0${encodedCriteria}&page=${currentPage}&per_page=${itemsPerPage}`
-    const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=${
-      encodedCriteria || 'Reserve_price:greater_than:0'
-    }&page=${currentPage}&per_page=${itemsPerPage}`
+        try {
+          const { filters, itemsPerPage } = get()
 
-    try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Zoho-oauthtoken ${accessToken}`,
-        },
-      })
-      // const result = await response.json()
-      // set({ data: result.data, loading: false })
+          const criteriaParts: string[] = []
+          if (filters?.auctionStartDate) {
+            criteriaParts.push(
+              `(Auction_start_date:greater_than:${filters.auctionStartDate})`
+            )
+          }
+          if (filters?.auctionEndDate) {
+            criteriaParts.push(
+              `(Auction_end_date:less_than:${filters.auctionEndDate})`
+            )
+          }
+          if (filters?.minPrice) {
+            criteriaParts.push(
+              `(Reserve_price:greater_than:${filters.minPrice})`
+            )
+          }
+          if (filters?.maxPrice) {
+            criteriaParts.push(`(Reserve_price:less_than:${filters.maxPrice})`)
+          }
+          if (filters?.propertyType?.length) {
+            criteriaParts.push(
+              `(Property_Type:in:${filters.propertyType.join(',')})`
+            )
+          }
+          if (filters?.area?.length) {
+            criteriaParts.push(`(Area:in:${filters.area.join(',')})`)
+          }
 
-      if (response.status === 204) {
-        set({ data: null, loading: false }) // Handle no content
-      } else if (response.ok) {
-        const result = await response.json()
-        set({ data: result.data, loading: false })
-      } else {
-        throw new Error(`Unexpected response status: ${response.status}`)
-      }
-    } catch (error) {
-      // @ts-ignore
-      set({ error: error.message, loading: false })
-    }
-  },
-}))
+          const criteria = criteriaParts.join('and')
+          const encodedCriteria = encodeURIComponent(criteria)
+
+          const url = `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?${
+            criteria
+              ? `criteria=${encodedCriteria}`
+              : 'criteria=(Reserve_price:greater_than:0)'
+          }&page=${currentPage}&per_page=${itemsPerPage}`
+
+          const response = await fetch(url, {
+            headers: {
+              Authorization: `Zoho-oauthtoken ${accessToken}`,
+            },
+          })
+
+          if (response.status === 204) {
+            set({ data: null, loading: false })
+          } else if (response.ok) {
+            const result = await response.json()
+            set({ data: result.data, loading: false })
+          } else {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
+        } catch (error: unknown) {
+          console.error('Error fetching data:', error)
+          set({
+            error: 'Failed to fetch data. Please try again later.',
+            loading: false,
+          })
+        }
+      },
+    }),
+    persistConfig
+  )
+)
