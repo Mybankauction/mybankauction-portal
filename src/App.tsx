@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Footer from './components/Footer'
 import Header from './components/Header'
+import Maintenance from './components/Maintenance'
 import ProtectedRoute from './components/ProtectedRoute'
 import Account from './pages/Account'
 import Home from './pages/Home'
@@ -16,14 +17,15 @@ export default function App() {
         <BrowserRouter>
           <Header />
           <Routes>
-            <Route element={<ProtectedRoute />}>
+            <Route element={<Maintenance />} path='*' />
+            {/* <Route element={<ProtectedRoute />}>
               <Route element={<Home />} path='/' />
               <Route element={<ItemDetails />} path='/properties/:id' />
               <Route element={<Account />} path='/account' />
             </Route>
             <Route element={<Login />} path='/login' />
             <Route element={<Signup />} path='/signup' />
-            <Route element={<NotFound />} path='*' />
+            <Route element={<NotFound />} path='*' /> */}
           </Routes>
           {/* <hr className='my-16 border-gray-200 max-w-[80rem] mx-auto' /> */}
           {/* <Footer /> */}
