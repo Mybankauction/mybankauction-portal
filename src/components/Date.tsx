@@ -15,7 +15,6 @@ export default function DateComponent({
   label,
 }: any) {
   const [open, setOpen] = useState(false)
-  debugger
   if (date) {
     console.log(JSON.stringify(date, null, 2))
   }
