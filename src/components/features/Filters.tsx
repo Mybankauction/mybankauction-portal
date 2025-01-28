@@ -3,11 +3,11 @@ import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
 import { formattedDate } from '@/utils'
 import { useEffect, useState } from 'react'
-import Date from './Date'
-import MultiSelect from './MultiSelect'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
+import DateComponent from '../Date'
+import MultiSelect from '../MultiSelect'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
 
 type AreaOption = {
   value: string
@@ -23,8 +23,8 @@ export default function Filters() {
   const [filteredAreaOptions, setFilteredAreaOptions] = useState<AreaOption[]>(
     []
   )
-  const [auctionStartDate, setAuctionStartDate] = useState<string | null>(null)
-  const [auctionEndDate, setAuctionEndDate] = useState<string | null>(null)
+  const [auctionStartDate, setAuctionStartDate] = useState<string | null>('')
+  const [auctionEndDate, setAuctionEndDate] = useState<string | null>('')
   const { filters, setFilters, fetchData, loading } = useApiStore()
   const [selectedAreaOptions, setSelectedAreaOptions] = useState<AreaOption[]>(
     []
@@ -35,6 +35,7 @@ export default function Filters() {
   const [minPrice, setMinPrice] = useState<string>('')
   const [maxPrice, setMaxPrice] = useState<string>('')
 
+  // Submit Form
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
@@ -56,10 +57,10 @@ export default function Filters() {
     })
     if (accessToken) fetchData(accessToken, 1)
   }
-
+  // console.log({ auctionEndDate }, { auctionStartDate })
   const handleClearFilters = async () => {
-    setAuctionStartDate(null)
-    setAuctionEndDate(null)
+    setAuctionStartDate('')
+    setAuctionEndDate('')
     setSelectedPropertyTypeOptions([])
     setSelectedAreaOptions([])
     setMinPrice('')
@@ -86,7 +87,7 @@ export default function Filters() {
       setFilteredAreaOptions([])
     }
   }
-
+  console.log({ filters })
   useEffect(() => {
     if (filters) {
       setSelectedAreaOptions(
@@ -101,8 +102,8 @@ export default function Filters() {
           label: type,
         })) || []
       )
-      setAuctionStartDate(filters.auctionStartDate || null)
-      setAuctionEndDate(filters.auctionEndDate || null)
+      setAuctionStartDate(filters.auctionStartDate || '')
+      setAuctionEndDate(filters.auctionEndDate || '')
       setMinPrice(filters.minPrice?.toString() || '')
       setMaxPrice(filters.maxPrice?.toString() || '')
     }
@@ -119,7 +120,7 @@ export default function Filters() {
         {/* Area Input */}
         <MultiSelect
           options={filteredAreaOptions}
-          placeholder='Type at least 2 characters...'
+          placeholder='Ex: HSR, Sarjapura'
           onInputChange={handleAreaInputChange}
           onChange={handleAreaSelectChange}
           value={selectedAreaOptions}
@@ -133,7 +134,7 @@ export default function Filters() {
         {/* Property Type */}
         <MultiSelect
           options={PROPERTY_TYPES}
-          placeholder='Nothing selected'
+          placeholder='Ex: Land, Flat'
           onChange={handlePropertyTypeSelectChange}
           value={selectedPropertyTypeOptions}
           name='propertyType'
@@ -143,7 +144,7 @@ export default function Filters() {
         <hr className='border-gray-200 max-w-full my-2' />
         {/* Date Inputs */}
         <div>
-          <Date
+          <DateComponent
             placeholder='Select date'
             date={auctionStartDate}
             setDate={setAuctionStartDate}
@@ -152,7 +153,7 @@ export default function Filters() {
           />
         </div>
         <div>
-          <Date
+          <DateComponent
             placeholder='Select date'
             date={auctionEndDate}
             setDate={setAuctionEndDate}

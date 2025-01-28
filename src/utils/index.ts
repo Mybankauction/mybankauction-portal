@@ -35,7 +35,14 @@ export const convertToTimeZoneOffset = (
 
 export const formattedDate = (date: string) => {
   if (!date) return ''
-  return new Date(date).toISOString().replace('.000Z', '+05:30')
+  const selectedDate = new Date(date)
+  // Manually construct the date string in "YYYY-MM-DD" format
+  const year = selectedDate.getFullYear()
+  const month = String(selectedDate.getMonth() + 1).padStart(2, '0') // Months are 0-based
+  const day = String(selectedDate.getDate()).padStart(2, '0')
+
+  // Append the fixed "+05:30" offset for consistency
+  return `${year}-${month}-${day}T00:00:00+05:30`
 }
 
 export function convertDateToReadableFormat(dateStr: any) {

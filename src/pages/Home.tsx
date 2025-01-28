@@ -1,4 +1,4 @@
-import Filters from '@/components/Filters'
+import Filters from '@/components/features/Filters'
 import PaginatedList from '@/components/PaginationList'
 
 export default function Home() {
