@@ -17,7 +17,7 @@ export default function MySelect({ options, value, onChange, name }: any) {
     setSelectedValue(value || '')
   }, [value])
 
-  console.log({ value })
+  // console.log({ value })
 
   return (
     <div>
