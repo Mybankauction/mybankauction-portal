@@ -2,7 +2,7 @@ import SingleHouse from '@/components/SingleHouse'
 import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
 import { Data } from '@/types'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { MagnifyingGlass } from 'react-loader-spinner'
 import { ScrollArea } from './ui/scroll-area'
 
@@ -57,6 +57,7 @@ const PaginatedList = () => {
       (filters.area && filters.area.length > 0) ||
       filters.minPrice ||
       filters.maxPrice ||
+      filters.auctionId ||
       (filters.propertyType && filters.propertyType.length > 0)
     )
   }
@@ -81,8 +82,10 @@ const PaginatedList = () => {
         </div>
       ) : (
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8 relative'>
-          {data?.map(() => (
-            <Loader />
+          {Array.from({ length: 21 }, (_, idx) => (
+            <Fragment key={idx}>
+              <Loader />
+            </Fragment>
           ))}
         </div>
       )}
