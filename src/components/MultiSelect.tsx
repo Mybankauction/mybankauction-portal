@@ -24,7 +24,7 @@ export default function MultiSelect({
         name={name}
         value={value}
         id={id}
-        className='border-neutral-400 mt-2'
+        className='border-neutral-400 mt-1'
       />
     </div>
   )

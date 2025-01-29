@@ -34,6 +34,7 @@ export default function Filters() {
   const accessToken = useAccessToken()
   const [minPrice, setMinPrice] = useState<string>('')
   const [maxPrice, setMaxPrice] = useState<string>('')
+  const [auctionId, setAuctionId] = useState('')
 
   // Submit Form
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -57,6 +58,13 @@ export default function Filters() {
     })
     if (accessToken) fetchData(accessToken, 1)
   }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+    }
+  }
+
   // console.log({ auctionEndDate }, { auctionStartDate })
   const handleClearFilters = async () => {
     setAuctionStartDate('')
@@ -65,6 +73,7 @@ export default function Filters() {
     setSelectedAreaOptions([])
     setMinPrice('')
     setMaxPrice('')
+    setAuctionId('')
     setFilters({})
     localStorage.removeItem('apiStore')
     if (accessToken) fetchData(accessToken, 1)
@@ -106,6 +115,7 @@ export default function Filters() {
       setAuctionEndDate(filters.auctionEndDate || '')
       setMinPrice(filters.minPrice?.toString() || '')
       setMaxPrice(filters.maxPrice?.toString() || '')
+      setAuctionId(filters.auctionId?.toString() || '')
     }
   }, [filters])
 
@@ -116,7 +126,27 @@ export default function Filters() {
 
   return (
     <section className=' flex-wrap gap- py-3 px-6 shadow border-gray-300 rounded  max-w-[380px] bg-white'>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-2 w-[340px]'>
+      <form
+        onSubmit={handleSubmit}
+        className='flex flex-col gap-2 w-[340px]'
+        onKeyDown={handleKeyDown}
+      >
+        {/* Auction ID */}
+        <div>
+          <Label htmlFor='auctionId'>Auction Id</Label>
+          <Input
+            type='number'
+            id='auctionId'
+            name='auctionId'
+            placeholder='Ex: 453608'
+            className='mt-1'
+            value={auctionId}
+            onChange={(e) => setAuctionId(e.target.value)}
+          />
+        </div>
+
+        <hr className='border-gray-200 max-w-full  my-2' />
+
         {/* Area Input */}
         <MultiSelect
           options={filteredAreaOptions}
@@ -138,7 +168,7 @@ export default function Filters() {
           onChange={handlePropertyTypeSelectChange}
           value={selectedPropertyTypeOptions}
           name='propertyType'
-          label='Property type'
+          label='Property Type'
           id='propertyType'
         />
         <hr className='border-gray-200 max-w-full my-2' />
@@ -163,30 +193,32 @@ export default function Filters() {
         </div>
         <hr className='border-gray-200 max-w-full  my-2' />
         {/* Min Price */}
-        <div>
-          <Label htmlFor='minPrice'>Min Price</Label>
-          <Input
-            type='number'
-            id='minPrice'
-            name='minPrice'
-            placeholder='Min price'
-            className='mt-1'
-            value={minPrice} // Add this line
-            onChange={(e) => setMinPrice(e.target.value)}
-          />
-        </div>
-        {/* Max Price */}
-        <div>
-          <Label htmlFor='maxPrice'>Max Price</Label>
-          <Input
-            type='number'
-            id='maxPrice'
-            name='maxPrice'
-            placeholder='Max price'
-            className=''
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-          />
+        <div className='flex items-center gap-3'>
+          <div>
+            <Label htmlFor='minPrice'>Min Price</Label>
+            <Input
+              type='number'
+              id='minPrice'
+              name='minPrice'
+              placeholder='Min price'
+              className=''
+              value={minPrice} // Add this line
+              onChange={(e) => setMinPrice(e.target.value)}
+            />
+          </div>
+          {/* Max Price */}
+          <div>
+            <Label htmlFor='maxPrice'>Max Price</Label>
+            <Input
+              type='number'
+              id='maxPrice'
+              name='maxPrice'
+              placeholder='Max price'
+              className=''
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+            />
+          </div>
         </div>
         {filters.auctionEndDate ||
         filters.area ||

@@ -9,6 +9,7 @@ type Filters = {
   minPrice?: number
   maxPrice?: number
   propertyType?: string[]
+  auctionId?: string
 }
 
 type ApiStoreState = {
@@ -61,6 +62,9 @@ export const useApiStore = create<ApiStoreState>()(
           }
           if (filters?.maxPrice) {
             criteriaParts.push(`(Reserve_price:less_than:${filters.maxPrice})`)
+          }
+          if (filters?.auctionId) {
+            criteriaParts.push(`(Auction_id:equals:${filters.auctionId})`)
           }
           if (filters?.propertyType?.length) {
             criteriaParts.push(

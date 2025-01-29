@@ -2,11 +2,12 @@ import SingleHouse from '@/components/SingleHouse'
 import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
 import { Data } from '@/types'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { MagnifyingGlass } from 'react-loader-spinner'
 import { ScrollArea } from './ui/scroll-area'
 
 import { API_BASE_URL, API_ENDPOINT } from '@/conf'
+import Loader from './Loader'
 import { Button } from './ui/button'
 
 const PaginatedList = () => {
@@ -56,38 +57,36 @@ const PaginatedList = () => {
       (filters.area && filters.area.length > 0) ||
       filters.minPrice ||
       filters.maxPrice ||
+      filters.auctionId ||
       (filters.propertyType && filters.propertyType.length > 0)
     )
   }
 
   return (
     <div className='max-w-[1000px] w-full min-h-[300px] h-[calc(100vh-100px)] overflow-y-scroll px-2 md:px-5'>
-      {loading ? (
-        <div className='mx-auto mt-10'>
-          <MagnifyingGlass
-            visible={true}
-            height='90'
-            width='90'
-            ariaLabel='magnifying-glass-loading'
-            wrapperStyle={{ margin: 'auto' }}
-            wrapperClass='magnifying-glass-wrapper'
-            glassColor='#c0efff'
-            color='#e15b64'
-          />
+      {!loading ? (
+        <div className='mx-auto'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8 relative'>
+            {data ? (
+              data?.map((item: Data) => (
+                <SingleHouse key={item.Auction_id} data={item} />
+              ))
+            ) : (
+              <div className='flex h-full absolute top-14 left-[50%] transform -translate-x-1/2 -translate-y-1/2'>
+                <h1 className='text-xl md:text-4xl font-bold text-center text-gray-400'>
+                  Nothing to show
+                </h1>
+              </div>
+            )}
+          </div>
         </div>
       ) : (
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8 relative'>
-          {data ? (
-            data?.map((item: Data) => (
-              <SingleHouse key={item.Auction_id} data={item} />
-            ))
-          ) : (
-            <div className='flex h-full absolute top-14 left-[50%] transform -translate-x-1/2 -translate-y-1/2'>
-              <h1 className='text-xl md:text-4xl font-bold text-center text-gray-400'>
-                Nothing to show
-              </h1>
-            </div>
-          )}
+          {Array.from({ length: 21 }, (_, idx) => (
+            <Fragment key={idx}>
+              <Loader />
+            </Fragment>
+          ))}
         </div>
       )}
 

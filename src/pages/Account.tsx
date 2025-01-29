@@ -10,6 +10,7 @@ export default function Account() {
     localStorage.removeItem('user')
     localStorage.removeItem('isLoggedin')
     localStorage.removeItem('interestedDeals')
+    localStorage.removeItem('apiStore')
     triggerAuthUpdate()
     setUser(null)
     navigate('/login')
