@@ -1,7 +1,7 @@
 import { BANGALORE_AREAS, PROPERTY_TYPES } from '@/constants'
 import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
-import { formattedDate } from '@/utils'
+import { formatRupee, formattedDate } from '@/utils'
 import { useEffect, useState } from 'react'
 import DateComponent from '../Date'
 import MultiSelect from '../MultiSelect'
@@ -49,12 +49,14 @@ export default function Filters() {
       auctionEndDate: formattedDate(auctionEndDate!),
       area: selectedAreaOptions.map((option) => option.value),
       propertyType: selectedPropertyTypeOptions.map((option) => option.value),
-      minPrice: formFilters.minPrice
-        ? parseInt(formFilters.minPrice as string)
-        : null,
-      maxPrice: formFilters.maxPrice
-        ? parseInt(formFilters.maxPrice as string)
-        : null,
+      // minPrice: formFilters.minPrice
+      //   ? parseInt(formFilters.minPrice as string)
+      //   : null,
+      // maxPrice: formFilters.maxPrice
+      //   ? parseInt(formFilters.maxPrice as string)
+      //   : null,
+      minPrice: minPrice.replace(/,/g, ''),
+      maxPrice: maxPrice.replace(/,/g, ''),
     })
     if (accessToken) fetchData(accessToken, 1)
   }
@@ -122,6 +124,16 @@ export default function Filters() {
   // Property type
   const handlePropertyTypeSelectChange = (selected: PropertyTypeOption[]) => {
     setSelectedPropertyTypeOptions(selected)
+  }
+
+  const handlePriceChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setPrice: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    const rawValue = e.target.value.replace(/,/g, '') // Remove commas
+    if (!isNaN(Number(rawValue))) {
+      setPrice(formatRupee(rawValue)) // Format value with commas
+    }
   }
 
   return (
@@ -197,26 +209,26 @@ export default function Filters() {
           <div>
             <Label htmlFor='minPrice'>Min Price</Label>
             <Input
-              type='number'
+              type='text'
               id='minPrice'
               name='minPrice'
               placeholder='Min price'
               className=''
-              value={minPrice} // Add this line
-              onChange={(e) => setMinPrice(e.target.value)}
+              value={formatRupee(minPrice)}
+              onChange={(e) => handlePriceChange(e, setMinPrice)}
             />
           </div>
           {/* Max Price */}
           <div>
             <Label htmlFor='maxPrice'>Max Price</Label>
             <Input
-              type='number'
+              type='text'
               id='maxPrice'
               name='maxPrice'
               placeholder='Max price'
               className=''
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
+              value={formatRupee(maxPrice)}
+              onChange={(e) => handlePriceChange(e, setMaxPrice)}
             />
           </div>
         </div>

@@ -150,14 +150,14 @@ export default function ItemDetails() {
           />
         </div>
       ) : (
-        <div>
+        <>
           <div>
-            <a href={'/'}>
+            <Link to={'/'}>
               <Button variant={'link'} className='text-red-400'>
                 <ArrowLeft />
                 Go back
               </Button>
-            </a>
+            </Link>
           </div>
           <div className='border p-4 bg-slate-100 rounded-md'>
             <div className='text-2xl font-bold flex items-center justify-between'>
@@ -320,7 +320,7 @@ export default function ItemDetails() {
           />
         </a>
       </div> */}
-        </div>
+        </>
       )}
     </div>
   )
