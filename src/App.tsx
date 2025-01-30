@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -11,6 +12,18 @@ import NotFound from './pages/NotFound'
 import Signup from './pages/Signup'
 
 export default function App() {
+  useEffect(() => {
+    const isCleared = localStorage.getItem('isAlreadyCleared')
+
+    if (!isCleared) {
+      // Clear the relevant localStorage items
+      localStorage.clear()
+
+      // Set the flag to prevent future clears
+      localStorage.setItem('isAlreadyCleared', 'true')
+    }
+  }, [])
+
   return (
     <div className=''>
       <div className='container px-3 '>
