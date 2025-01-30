@@ -31,7 +31,7 @@ export const useApiStore = create<ApiStoreState>()(
   persist(
     (set, get) => ({
       filters: {} as Filters,
-      itemsPerPage: 21,
+      itemsPerPage: 24,
       data: null,
       loading: false,
       error: null,

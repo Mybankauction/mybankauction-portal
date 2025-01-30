@@ -66,7 +66,8 @@ const PaginatedList = () => {
     <div className='max-w-[1000px] w-full min-h-[300px] h-[calc(100vh-100px)] overflow-y-scroll px-2 md:px-5'>
       {!loading ? (
         <div className='mx-auto'>
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8 relative'>
+          {/* grid-cols-1 sm:grid-cols-2 */}
+          <div className='grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-2 xl:grid-cols-3 gap-5 mb-8 relative'>
             {data ? (
               data?.map((item: Data) => (
                 <SingleHouse key={item.Auction_id} data={item} />
