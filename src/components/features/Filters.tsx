@@ -19,7 +19,7 @@ type PropertyTypeOption = {
   label: string
 }
 
-export default function Filters() {
+export default function Filters({ setIsOpen }: any) {
   const [filteredAreaOptions, setFilteredAreaOptions] = useState<AreaOption[]>(
     []
   )
@@ -136,11 +136,22 @@ export default function Filters() {
     }
   }
 
+  // const anyFiltersApplied = Boolean(
+  //   filters.auctionStartDate ||
+  //     filters.auctionEndDate ||
+  //     filters?.area?.length > 0 ||
+  //     filters.minPrice ||
+  //     filters.maxPrice ||
+  //     filters.auctionId ||
+  //     filters?.propertyType?.length > 0
+  // )
+
   return (
-    <section className=' flex-wrap gap- py-3 px-6 shadow border-gray-300 rounded  max-w-[380px] bg-white'>
+    <section className=' flex-wrap gap- py-3 px-6 shadow border-gray-300 rounded  bg-white min-w-[320px] max-w-[380px] '>
       <form
         onSubmit={handleSubmit}
-        className='flex flex-col gap-2 w-[340px]'
+        // w-[340px]
+        className='flex flex-col gap-2 '
         onKeyDown={handleKeyDown}
       >
         {/* Auction ID */}
@@ -242,7 +253,9 @@ export default function Filters() {
           <Button
             variant='link'
             className='inline max-w-fit px-0 text-red-400'
-            onClick={handleClearFilters}
+            onClick={() => {
+              handleClearFilters()
+            }}
           >
             Clear Filters
           </Button>
@@ -252,6 +265,11 @@ export default function Filters() {
           type='submit'
           className='rounded bg-red-400 px-4 py-2 text-white disabled:bg-red-600 disabled:cursor-not-allowed'
           disabled={loading}
+          // onClick={() => {
+          //   if (!loading && !anyFiltersApplied) {
+          //     setIsOpen(false)
+          //   }
+          // }}
         >
           Search
         </button>
