@@ -7,14 +7,14 @@ import { ArrowLeft, CalendarDays, Heart, LandPlot, MapPin } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { MagnifyingGlass } from 'react-loader-spinner'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 export default function ItemDetails() {
   const accessToken = useAccessToken()
   const { id } = useParams()
   const [data, setData] = useState<Data>()
   const [isLoading, setIsLoading] = useState(false)
-
+  const navigate = useNavigate()
   const [isInterested, setIsInterested] = useState(false) // Initial button color
 
   useEffect(() => {
@@ -39,6 +39,10 @@ export default function ItemDetails() {
           },
         }
       )
+      if (res.status === 204) {
+        navigate('*', { replace: true })
+        return
+      }
       const _data = await res.json()
       setData(_data.data[0])
     } catch (error) {
