@@ -12,17 +12,17 @@ import NotFound from './pages/NotFound'
 import Signup from './pages/Signup'
 
 export default function App() {
-  useEffect(() => {
-    const isCleared = localStorage.getItem('isAlreadyCleared')
+  // useEffect(() => {
+  //   const isCleared = localStorage.getItem('isAlreadyCleared')
 
-    if (!isCleared) {
-      // Clear the relevant localStorage items
-      localStorage.clear()
+  //   if (!isCleared) {
+  //     // Clear the relevant localStorage items
+  //     localStorage.clear()
 
-      // Set the flag to prevent future clears
-      localStorage.setItem('isAlreadyCleared', 'true')
-    }
-  }, [])
+  //     // Set the flag to prevent future clears
+  //     localStorage.setItem('isAlreadyCleared', 'true')
+  //   }
+  // }, [])
 
   return (
     <div className=''>
