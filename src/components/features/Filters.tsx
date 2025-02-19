@@ -31,7 +31,7 @@ export default function Filters({ setIsOpen }: any) {
   )
   const [selectedPropertyTypeOptions, setSelectedPropertyTypeOptions] =
     useState<PropertyTypeOption[]>([])
-  const accessToken = useAccessToken()
+  const { accessToken } = useAccessToken()
   const [minPrice, setMinPrice] = useState<string>('')
   const [maxPrice, setMaxPrice] = useState<string>('')
   const [auctionId, setAuctionId] = useState('')

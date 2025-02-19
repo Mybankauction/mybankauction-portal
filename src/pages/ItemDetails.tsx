@@ -10,7 +10,7 @@ import { MagnifyingGlass } from 'react-loader-spinner'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 export default function ItemDetails() {
-  const accessToken = useAccessToken()
+  const { accessToken, refreshToken } = useAccessToken()
   const { id } = useParams()
   const [data, setData] = useState<Data>()
   const [isLoading, setIsLoading] = useState(false)
@@ -39,6 +39,10 @@ export default function ItemDetails() {
           },
         }
       )
+      if (res.status === 401) {
+        refreshToken()
+        console.log('its 401 ', accessToken)
+      }
       if (res.status === 204) {
         navigate('*', { replace: true })
         return

@@ -11,7 +11,7 @@ import Loader from './Loader'
 import { Button } from './ui/button'
 
 const PaginatedList = () => {
-  const accessToken = useAccessToken()
+  const { accessToken } = useAccessToken()
   const [currentPage, setCurrentPage] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
 

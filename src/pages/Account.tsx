@@ -9,11 +9,11 @@ export default function Account() {
   const handleLogout = () => {
     localStorage.removeItem('user')
     localStorage.removeItem('isLoggedin')
-    localStorage.removeItem('interestedDeals')
     localStorage.removeItem('apiStore')
     triggerAuthUpdate()
     setUser(null)
     navigate('/login')
+    window.location.reload()
   }
 
   useEffect(() => {

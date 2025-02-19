@@ -1,3 +1,4 @@
+import useAuth from '@/hooks/useAuth'
 import { UserRound } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -26,31 +27,38 @@ function NavLinks() {
 }
 
 export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem('isLoggedin') === 'true'
-  )
+  // const [isLoggedIn, setIsLoggedIn] = useState(
+  //   localStorage.getItem('isLoggedin') === 'true'
+  // )
 
-  useEffect(() => {
-    const loggedIn = localStorage.getItem('isLoggedin') === 'true'
-    setIsLoggedIn(loggedIn)
-  }, [])
+  // const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  //   const user = localStorage.getItem('user')
+  //   return user ? (JSON.parse(user)?.id ? true : false) : false
+  // })
+  const isLoggedIn = useAuth()
+  console.log({ isLoggedIn })
+  // useEffect(() => {
+  //   // const loggedIn = localStorage.getItem('isLoggedin') === 'true'
+  //   const loggedIn = isLoggedIn?.id ? true : false
+  //   setIsLoggedIn(loggedIn)
+  // }, [])
 
   // Added in useEffect to handle auth state updates
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const loggedIn = localStorage.getItem('isLoggedin') === 'true'
-      setIsLoggedIn(loggedIn)
-    }
+  // useEffect(() => {
+  //   const handleStorageChange = () => {
+  //     const loggedIn = localStorage.getItem('isLoggedin') === 'true'
+  //     setIsLoggedIn(loggedIn)
+  //   }
 
-    // Listen for storage or custom auth events
-    window.addEventListener('storage', handleStorageChange)
-    window.addEventListener('authEvent', handleStorageChange)
+  //   // Listen for storage or custom auth events
+  //   window.addEventListener('storage', handleStorageChange)
+  //   window.addEventListener('authEvent', handleStorageChange)
 
-    return () => {
-      window.removeEventListener('storage', handleStorageChange)
-      window.removeEventListener('authEvent', handleStorageChange)
-    }
-  }, [])
+  //   return () => {
+  //     window.removeEventListener('storage', handleStorageChange)
+  //     window.removeEventListener('authEvent', handleStorageChange)
+  //   }
+  // }, [])
 
   return (
     <header className='flex justify-between items-center  mb-5 rounded-md  py-3 px-5'>
