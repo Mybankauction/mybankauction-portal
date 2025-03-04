@@ -21,7 +21,7 @@ export default function Signup() {
   const redirect = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const accessToken = useAccessToken()
+  const { accessToken } = useAccessToken()
   const handleInputChange = (e: any) => {
     const { id, value } = e.target
     setUser((prevUser) => ({ ...prevUser, [id]: value }))

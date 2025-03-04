@@ -44,7 +44,7 @@ const useAccessToken = () => {
     return () => clearInterval(interval) // Cleanup on unmount
   }, [])
 
-  return accessToken
+  return { accessToken, refreshToken }
 }
 
 export default useAccessToken

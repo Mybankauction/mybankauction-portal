@@ -10,7 +10,7 @@ import { MagnifyingGlass } from 'react-loader-spinner'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 export default function ItemDetails() {
-  const accessToken = useAccessToken()
+  const { accessToken, refreshToken } = useAccessToken()
   const { id } = useParams()
   const [data, setData] = useState<Data>()
   const [isLoading, setIsLoading] = useState(false)
@@ -39,6 +39,10 @@ export default function ItemDetails() {
           },
         }
       )
+      if (res.status === 401) {
+        refreshToken()
+        console.log('its 401 ', accessToken)
+      }
       if (res.status === 204) {
         navigate('*', { replace: true })
         return
@@ -169,7 +173,7 @@ export default function ItemDetails() {
                 {/* {data?.Bank_Name} Auctions for {data?.Property_Type} in{' '}
                 {data?.Area?.name ?? 'N/A'}, {data?.City} */}
                 Auction for {data?.Property_Type} in {data?.Area ?? 'N/A'},{' '}
-                {data?.City} for ₹{formatRupee(data?.Reserve_price! ?? '')}
+                {data?.City.name} for ₹{formatRupee(data?.Reserve_price! ?? '')}
               </p>
               <button
                 onClick={handleInterestedButtonClick}
@@ -198,7 +202,8 @@ export default function ItemDetails() {
                 <p>
                   <MapPin />
                 </p>
-                <p>{data?.City}</p>
+
+                <p>{data?.City.name}</p>
               </div>
               <div className='flex items-center gap-x-2'>
                 <p>
@@ -306,7 +311,7 @@ export default function ItemDetails() {
                 <span className='font-bold'>State:</span> {data?.State}
               </p>
               <p>
-                <span className='font-bold'>City:</span> {data?.City}
+                <span className='font-bold'>City:</span> {data?.City.name}
               </p>
               <p>
                 <span className='font-bold'>Area:</span> {data?.Area}

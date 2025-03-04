@@ -4,6 +4,7 @@ import Footer from './components/Footer'
 import Header from './components/Header'
 import Maintenance from './components/Maintenance'
 import ProtectedRoute from './components/ProtectedRoute'
+import useAccessToken from './hooks/useAccessToken'
 import Account from './pages/Account'
 import Home from './pages/Home'
 import ItemDetails from './pages/ItemDetails'
@@ -12,6 +13,7 @@ import NotFound from './pages/NotFound'
 import Signup from './pages/Signup'
 
 export default function App() {
+  // useAccessToken()
   // useEffect(() => {
   //   const isCleared = localStorage.getItem('isAlreadyCleared')
 

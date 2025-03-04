@@ -11,7 +11,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 const loginCode = generateLoginCode()
 
 export default function Login() {
-  const accessToken = useAccessToken()
+  const { accessToken } = useAccessToken()
   const [searchParams] = useSearchParams()
   const [loginEmail, setLoginEmail] = useState('')
   const [isEmailValid, setIsEmailValid] = useState(false)
