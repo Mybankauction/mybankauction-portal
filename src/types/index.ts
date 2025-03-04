@@ -37,7 +37,10 @@ export type Data = {
   Borrower_Name: string
   editable: boolean
   Property_Type: string
-  City: string
+  City: {
+    id: string
+    name: string
+  }
   Last_date_to_submit_the_tender_form_for_theauction: any
   Auction_End: string
   Nature_of_Possession: any
