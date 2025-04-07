@@ -257,6 +257,10 @@ export default function ItemDetails() {
             <div className='flex items-center gap-6 flex-wrap'>
               <div className='*:py-2'>
                 <div>
+                  <span className='font-bold'>Auction Id:</span>{' '}
+                  {data?.Auction_id}
+                </div>
+                <div>
                   <span className='font-bold'>Borrower Name:</span>{' '}
                   {data?.Borrower_Name}
                 </div>

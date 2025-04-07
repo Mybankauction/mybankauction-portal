@@ -40,6 +40,10 @@ export default function SingleHouse({ data }: { data: Data }) {
           <div className='*:py-1 tracking-wide'>
             {/* <div className='flex items-center justify-between'> */}
             <p>
+              #️⃣ <span className='font-semibold text-pretty'>Auction Id: </span>
+              {data.Auction_id}
+            </p>
+            <p>
               💰{' '}
               <span className='font-semibold text-pretty'>
                 Reserved Price:{' '}
