@@ -8,7 +8,7 @@ import landAndBuilding from '@/assets/land-and-building.jpeg'
 import land from '@/assets/land.jpeg'
 import land3 from '@/assets/land.jpg'
 import land2 from '@/assets/land2.webp'
-import logo from '@/assets/logo.png'
+import logo from '@/assets/Mybankauction__2_-removebg-preview.png'
 import plot from '@/assets/plot.jpeg'
 
 export const Image = {

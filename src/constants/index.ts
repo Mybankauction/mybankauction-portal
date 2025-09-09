@@ -1,8 +1,24 @@
 export const NAV_LINKS = [
   {
     name: 'Home',
+    id:"home",
     url: '/',
-  },
+  },{
+    name:"About",
+    id:"about"
+  },{
+    name:"Why-us",
+    id:"why-us"
+  },{
+    name: "Process",
+    id: "process"
+  },{
+    name:"Faq",
+    id:"faq"
+  },{
+    name: "Contact",
+    id: "contact"
+  }
   // {
   //   name: 'Properties',
   //   url: '/properties',

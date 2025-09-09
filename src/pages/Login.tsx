@@ -115,105 +115,89 @@ export default function Login() {
 
   return (
     <>
-      <div className='text-gray-900 flex justify-center'>
-        <div className='max-w-screen-xl m-0 sm:rounded-lg flex justify-center flex-1'>
-          <div className='lg:w-1/2 xl:w-5/12 sm:p-0'>
-            <div className='mt-12 flex flex-col items-center'>
-              <h1 className='text-2xl xl:text-3xl font-extrabold'>Login</h1>
-              <div className='w-full flex-1 mt-8'>
-                <form
-                  onSubmit={handleEmailValidation}
-                  className='mx-auto w-full max-w-md'
-                >
-                  <div className=''>
-                    <label htmlFor='email' className='text-sm mb-1 block'>
-                      Email
+      <div className='text-gray-900 min-h-[100vh] flex items-center justify-center p-4'>
+        <div className='w-full max-w-md bg-white rounded-lg shadow-md p-6'>
+          <div className='mt-2 flex flex-col items-center'>
+            <h1 className='text-2xl xl:text-3xl font-extrabold'>Login</h1>
+            <div className='w-full flex-1 mt-6'>
+              <form
+                onSubmit={handleEmailValidation}
+                className='mx-auto w-full'
+              >
+                <div className=''>
+                  <label htmlFor='email' className='text-sm mb-1 block'>
+                    Email
+                  </label>
+                  <input
+                    className='w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
+                    type='email'
+                    id='email'
+                    placeholder='Email'
+                    value={loginEmail}
+                    onChange={(evt) => setLoginEmail(evt.target.value)}
+                    required
+                  />
+                </div>
+                {isEmailValid ? (
+                  <div className='mt-5'>
+                    <label htmlFor='password' className='text-sm mb-1 block'>
+                      Code
                     </label>
                     <input
-                      className='w-full px-4 py-4 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
-                      type='email'
-                      id='email'
-                      placeholder='Email'
-                      value={loginEmail}
-                      onChange={(evt) => setLoginEmail(evt.target.value)}
+                      className='w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
+                      type='number'
+                      id='code'
+                      placeholder='Code'
+                      value={loginCodeInput}
+                      onChange={(evt) => setLoginCodeInput(evt.target.value)}
                       required
                     />
                   </div>
-                  {isEmailValid ? (
-                    <div className='mt-5'>
-                      <label htmlFor='password' className='text-sm mb-1 block'>
-                        Code
-                      </label>
-                      <input
-                        className='w-full px-4 py-4 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
-                        type='number'
-                        id='code'
-                        placeholder='Code'
-                        value={loginCodeInput}
-                        onChange={(evt) => setLoginCodeInput(evt.target.value)}
-                        required
+                ) : null}
+
+                <button
+                  className='mt-6 tracking-wide font-semibold bg-red-400 text-gray-100 w-full py-3 rounded-lg transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none'
+                  type='submit'
+                  onClick={
+                    loginCodeInput
+                      ? handleAfterCodeSent
+                      : handleEmailValidation
+                  }
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className='mx-auto flex'>
+                      <TailSpin
+                        visible={true}
+                        height='25'
+                        color='#fff'
+                        ariaLabel='tail-spin-loading'
+                        radius='1'
+                        wrapperStyle={{
+                          margin: 'auto',
+                          textAlign: 'center',
+                        }}
+                        wrapperClass=''
                       />
                     </div>
-                  ) : null}
-                  {/* <div className='mt-5'>
-                    <label htmlFor='password' className='text-sm mb-1 block'>
-                      Password *
-                    </label>
-                    <input
-                      className='w-full px-4 py-4 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
-                      type='password'
-                      id='password'
-                      placeholder='Password'
-                      // value={user.password}
-                      // onChange={handleInputChange}
-                      required
-                    />
-                  </div> */}
-
-                  <button
-                    className='mt-6 tracking-wide font-semibold bg-red-400 text-gray-100 w-full py-3 rounded-lg transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none'
-                    type='submit'
-                    onClick={
-                      loginCodeInput
-                        ? handleAfterCodeSent
-                        : handleEmailValidation
-                    }
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <div className='mx-auto flex'>
-                        <TailSpin
-                          visible={true}
-                          height='25'
-                          color='#fff'
-                          ariaLabel='tail-spin-loading'
-                          radius='1'
-                          wrapperStyle={{
-                            margin: 'auto',
-                            textAlign: 'center',
-                          }}
-                          wrapperClass=''
-                        />
-                      </div>
-                    ) : (
-                      <span className='ml-3'>Login</span>
-                    )}
-                  </button>
-                  <p className='text-center text-sm mt-3'>
-                    Don't have an account?{' '}
-                    <Link to='/signup' className='text-red-400 font-bold'>
-                      Sign Up
-                    </Link>
-                  </p>
-                </form>
-              </div>
+                  ) : (
+                    <span className='ml-3'>Login</span>
+                  )}
+                </button>
+                <p className='text-center text-sm mt-3'>
+                  Don't have an account?{' '}
+                  <Link to='/signup' className='text-red-400 font-bold'>
+                    Sign Up
+                  </Link>
+                </p>
+                <p className='text-center text-sm mt-3'>
+                  Go to HomePage?{' '}
+                  <Link to='/' className='text-red-400 font-bold'>
+                    HomePage
+                  </Link>
+                </p>
+              </form>
             </div>
-          </div>
-          <div className='flex-1 text-center hidden lg:flex'>
-            <div
-              className='m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat'
-              style={{ backgroundImage: `url(${Image.HouseRealEstate})` }}
-            ></div>
           </div>
         </div>
       </div>

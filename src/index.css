@@ -6,6 +6,14 @@
   :root {
     --radius: 0.5rem;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Prevent sticky header from covering anchored sections */
+.section-anchor {
+  scroll-margin-top: 90px; /* matches header height incl. padding */
 }
 
 .b-red {

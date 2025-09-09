@@ -2,7 +2,6 @@ import useAccessToken from '@/hooks/useAccessToken'
 import { generateReferralCode } from '@/utils'
 import { registerUser, verifyRefCode } from '@/utils/api'
 import { triggerAuthUpdate } from '@/utils/auth'
-import { Image } from '@/utils/images'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
@@ -165,115 +164,93 @@ export default function Signup() {
   }, [accessToken])
 
   return (
-    <div className=' text-gray-900 flex justify-center'>
-      <div className='max-w-screen-xl sm:rounded-lg flex justify-center flex-1'>
-        <div className='lg:w-1/2 xl:w-5/12 sm:p-0'>
-          <div className='flex flex-col items-center'>
-            <h1 className='text-2xl xl:text-3xl font-extrabold'>Sign up</h1>
-            <form className='w-full flex-1 ' onSubmit={handleSubmit}>
-              <div className='mx-auto w-full max-w-md'>
-                <div className=''>
-                  <label htmlFor='name' className='text-sm mb-1 block'>
-                    Name *
-                  </label>
-                  <input
-                    className='w-full px-4 py-4 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
-                    type='text'
-                    id='Name1'
-                    placeholder='Name'
-                    value={user.Name1 || ''}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className='mt-5'>
-                  <label htmlFor='email' className='text-sm mb-1 block'>
-                    Email *
-                  </label>
-                  <input
-                    className='w-full px-4 py-4 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
-                    type='email'
-                    id='Email'
-                    placeholder='Email'
-                    value={user.Email || ''}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className='mt-5'>
-                  <label htmlFor='phone' className='text-sm block mb-1'>
-                    Phone number *
-                  </label>
-                  <input
-                    className='w-full px-4 py-4 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none '
-                    type='tel'
-                    id='Phone'
-                    placeholder='Phone number'
-                    value={user.Phone || ''}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                {/* <div className='mt-5'>
-                  <label htmlFor='password' className='text-sm mb-1 block'>
-                    Password *
-                  </label>
-                  <input
-                    className='w-full px-4 py-4 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
-                    type='password'
-                    id='password'
-                    placeholder='Password'
-                    value={user.password}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div> */}
-                <div className='mt-5'>
-                  <label htmlFor='refCode' className='text-sm mb-1 block'>
-                    Referral code (optional)
-                  </label>
-                  <input
-                    className='w-full px-4 py-4 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
-                    type='number'
-                    id='refCode'
-                    placeholder='Code'
-                    minLength={4}
-                    maxLength={4}
-                    value={user.refCode || ''}
-                    onChange={handleInputChange}
-                  />
-                </div>
-
-                {error && <p className='text-red-500 text-sm mt-2'>{error}</p>}
-
-                <button
-                  type='submit'
-                  className='mt-5 tracking-wide font-semibold bg-red-400 text-gray-100 w-full py-3 rounded-lg  transition-all duration-300 ease-in-out flex items-center justify-center'
-                  disabled={loading}
-                >
-                  {loading ? (
-                    'Processing...'
-                  ) : (
-                    <span className='ml-3'>Sign Up</span>
-                  )}
-                </button>
-
-                <p className='text-center text-sm mt-3'>
-                  Already have an account?{' '}
-                  <Link to='/login' className='text-red-400 font-bold'>
-                    Login
-                  </Link>
-                </p>
+    <div className='min-h-[100vh] text-gray-900 flex items-center justify-center p-4'>
+      <div className='w-full max-w-md bg-white rounded-lg shadow-md p-6'>
+        <div className='flex flex-col items-center'>
+          <h1 className='text-2xl xl:text-3xl font-extrabold'>Sign up</h1>
+          <form className='w-full flex-1 mt-6' onSubmit={handleSubmit}>
+            <div className='w-full'>
+              <div className=''>
+                <label htmlFor='name' className='text-sm mb-1 block'>
+                  Name *
+                </label>
+                <input
+                  className='w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
+                  type='text'
+                  id='Name1'
+                  placeholder='Name'
+                  value={user.Name1 || ''}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
-            </form>
-          </div>
-        </div>
-        <div className='flex-1 text-center hidden lg:flex'>
-          <div
-            className='m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat'
-            style={{ backgroundImage: `url(${Image.HouseRealEstate})` }}
-          ></div>
+
+              <div className='mt-5'>
+                <label htmlFor='email' className='text-sm mb-1 block'>
+                  Email *
+                </label>
+                <input
+                  className='w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
+                  type='email'
+                  id='Email'
+                  placeholder='Email'
+                  value={user.Email || ''}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className='mt-5'>
+                <label htmlFor='phone' className='text-sm block mb-1'>
+                  Phone number *
+                </label>
+                <input
+                  className='w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none '
+                  type='tel'
+                  id='Phone'
+                  placeholder='Phone number'
+                  value={user.Phone || ''}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className='mt-5'>
+                <label htmlFor='refCode' className='text-sm mb-1 block'>
+                  Referral code (optional)
+                </label>
+                <input
+                  className='w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-200 text-sm focus:outline-none'
+                  type='number'
+                  id='refCode'
+                  placeholder='Code'
+                  minLength={4}
+                  maxLength={4}
+                  value={user.refCode || ''}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              {error && <p className='text-red-500 text-sm mt-2'>{error}</p>}
+
+              <button
+                type='submit'
+                className='mt-5 tracking-wide font-semibold bg-red-400 text-gray-100 w-full py-3 rounded-lg  transition-all duration-300 ease-in-out flex items-center justify-center'
+                disabled={loading}
+              >
+                {loading ? (
+                  'Processing...'
+                ) : (
+                  <span className='ml-3'>Sign Up</span>
+                )}
+              </button>
+
+              <p className='text-center text-sm mt-3'>
+                Already have an account?{' '}
+                <Link to='/login' className='text-red-400 font-bold'>
+                  Login
+                </Link>
+              </p>
+            </div>
+          </form>
         </div>
       </div>
     </div>

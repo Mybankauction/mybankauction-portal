@@ -10,13 +10,16 @@ export default {
       },
     },
     extend: {
+      screens: {
+        tablet: '850px',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
-        primary: '#FF0000',
+        primary: '#E34732',
         red: {
           100: '#ffcccc',
           200: '#ff9999',

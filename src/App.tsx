@@ -6,7 +6,7 @@ import Maintenance from './components/Maintenance'
 import ProtectedRoute from './components/ProtectedRoute'
 import useAccessToken from './hooks/useAccessToken'
 import Account from './pages/Account'
-import Home from './pages/Home'
+import IndexLanding from './landing_page/IndexLanding'
 import ItemDetails from './pages/ItemDetails'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
@@ -28,16 +28,15 @@ export default function App() {
 
   return (
     <div className=''>
-      <div className='container px-3 '>
+      <div className=''>
         <BrowserRouter>
-          <Header />
           <Routes>
             {/* <Route element={<Maintenance />} path='*' /> */}
             <Route element={<ProtectedRoute />}>
-              <Route element={<Home />} path='/' />
               <Route element={<ItemDetails />} path='/properties/:id' />
               <Route element={<Account />} path='/account' />
             </Route>
+            <Route element={<IndexLanding />} path='/' />
             <Route element={<Login />} path='/login' />
             <Route element={<Signup />} path='/signup' />
             <Route element={<NotFound />} path='*' />
