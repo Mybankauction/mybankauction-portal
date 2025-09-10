@@ -6,8 +6,9 @@ import FAQ from './FAQ'
 import HowItWorks from './HowItWorks'
 import ContactUs from './ContactUs'
 
-import Footer from '/home/myisabeiucy/Desktop/mybankauction/mybankauction-portal/src/landing_page/Footer.tsx'
+// import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import Footer from './Footer'
 
 const IndexLanding: React.FC = () => {
   return (

@@ -119,7 +119,7 @@ export default function Signup() {
   ): Promise<any> => {
     try {
       const verifyResponse = await verifyRefCode(refCode, accessToken)
-      console.log(verifyResponse)
+      // console.log(verifyResponse)
       if (verifyResponse) {
         return verifyResponse
       }

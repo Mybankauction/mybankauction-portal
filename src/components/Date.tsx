@@ -16,7 +16,7 @@ export default function DateComponent({
 }: any) {
   const [open, setOpen] = useState(false)
   if (date) {
-    console.log(JSON.stringify(date, null, 2))
+    // console.log(JSON.stringify(date, null, 2))
   }
   let formattedDate = date && format(new Date(date), 'PPP')
   return (

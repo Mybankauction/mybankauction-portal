@@ -117,7 +117,7 @@ export default function ItemDetails() {
     })
 
     const _data = await res.json()
-    console.log(_data)
+    // console.log(_data)
 
     const existingDeals = JSON.parse(
       localStorage.getItem('interestedDeals') || '[]'

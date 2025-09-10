@@ -64,7 +64,7 @@ export default function Login() {
   }
 
   const handleCode = async (data: any) => {
-    console.log(data)
+    // console.log(data)
     // Send put request - with login code and email
     const constructedData = {
       data: [
