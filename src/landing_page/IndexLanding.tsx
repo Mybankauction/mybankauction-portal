@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Hero from './Hero'
 import About from './About'
 import WhyUs from './WhyUs'
@@ -8,9 +8,19 @@ import ContactUs from './ContactUs'
 
 // import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import { useNavigate } from 'react-router-dom'
 import Footer from './Footer'
 
 const IndexLanding: React.FC = () => {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const user = localStorage.getItem('user')
+    if (user) {
+      navigate('/properties', { replace: true })
+    }
+  }, [navigate])
+
   return (
     <main className="relativ bg-slate-600 text-white">
       <Header />
@@ -34,7 +44,7 @@ const IndexLanding: React.FC = () => {
         <FAQ />
       </div>
       <div id='contact' className="section-anchor">
-        <ContactUs />
+        <ContactUs/>
       </div>
       <div>
         <Footer/>

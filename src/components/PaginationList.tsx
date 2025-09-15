@@ -1,54 +1,40 @@
 import SingleHouse from '@/components/SingleHouse'
-import useAccessToken from '@/hooks/useAccessToken'
 import { useApiStore } from '@/store/apiStore'
-import { Data } from '@/types'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { MagnifyingGlass } from 'react-loader-spinner'
 import { ScrollArea } from './ui/scroll-area'
 
-import { API_BASE_URL, API_ENDPOINT } from '@/conf'
 import Loader from './Loader'
 import { Button } from './ui/button'
 
 const PaginatedList = () => {
-  const { accessToken } = useAccessToken()
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalItems, setTotalItems] = useState(0)
 
-  const { data, fetchData, loading, itemsPerPage, filters } = useApiStore()
-  const fetchTotalCount = async () => {
-    if (!accessToken) return
+  const { data, fetchData, loading, itemsPerPage, filters, totalItems, totalPages } = useApiStore()
+  console.log(data);
+  
+  useEffect(() => {
+    fetchData(currentPage)
+  }, [currentPage])
 
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/${API_ENDPOINT.PROPERTIES}/actions/count`,
-        {
-          headers: {
-            Authorization: `Zoho-oauthtoken ${accessToken}`,
-          },
-        }
-      )
-      const result = await response.json()
-      setTotalItems(result.count || 0)
-    } catch (error) {
-      console.error('Error fetching total count:', error)
+  // Refetch when filters change and reset to first page
+  useEffect(() => {
+    setCurrentPage(1)
+    fetchData(1)
+  }, [filters])
+
+  // Clamp current page to totalPages when using server pagination
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages)
+      fetchData(totalPages)
     }
-  }
+  }, [totalPages])
 
-  const handleLoadMore = () => {
-    fetchData(accessToken, currentPage + 1)
-    setCurrentPage((prevPage) => prevPage + 1)
-  }
-
-  useEffect(() => {
-    fetchTotalCount()
-  }, [accessToken])
-
-  useEffect(() => {
-    fetchData(accessToken, currentPage)
-  }, [accessToken, currentPage])
-
-  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const paginatedData = useMemo(() => {
+    if (!Array.isArray(data)) return []
+    return data
+  }, [data])
 
   const anyFiltersApplied = () => {
     return (
@@ -58,19 +44,21 @@ const PaginatedList = () => {
       filters.minPrice ||
       filters.maxPrice ||
       filters.auctionId ||
+      filters.state ||
+      filters.city ||
       (filters.propertyType && filters.propertyType.length > 0)
     )
   }
 
   return (
-    <div className='max-w-[1000px] w-full min-h-[300px] h-[calc(100vh-100px)] overflow-y-scroll px-2 md:px-5'>
+    <div className='max-w-[1000px] w-full min-h-[300px] h-[75vh] overflow-y-scroll px-2 md:px-5'>
       {!loading ? (
         <div className='mx-auto'>
           {/* grid-cols-1 sm:grid-cols-2 */}
           <div className='grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-2 xl:grid-cols-3 gap-5 mb-8 relative'>
-            {data ? (
-              data?.map((item: Data) => (
-                <SingleHouse key={item.Auction_id} data={item} />
+            {Array.isArray(paginatedData) && paginatedData.length > 0 ? (
+              paginatedData.map((item: any) => (
+                <SingleHouse key={item["Auction Id"]} data={item} />
               ))
             ) : (
               <div className='flex h-full absolute top-14 left-[50%] transform -translate-x-1/2 -translate-y-1/2'>
@@ -92,19 +80,76 @@ const PaginatedList = () => {
       )}
 
       {/* Pagination */}
-      {!loading &&
-        data?.length! > 0 &&
-        currentPage < totalPages &&
-        !anyFiltersApplied() && (
-          <div>
-            <Button
-              className='bg-red-400 block mx-auto hover:bg-red-600'
-              onClick={handleLoadMore}
-            >
-              Load more
-            </Button>
+      {!loading && Array.isArray(paginatedData) && paginatedData.length > 0 && totalPages > 1 && (
+        <div className='flex justify-center items-center gap-2 mt-8'>
+          {/* Previous button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              if (currentPage > 1) {
+                setCurrentPage(currentPage - 1)
+                fetchData(currentPage - 1)
+              }
+            }}
+            disabled={currentPage === 1}
+            className='px-3 py-1'
+          >
+            Previous
+          </Button>
+
+          {/* Page numbers */}
+          <div className='flex gap-1'>
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+
+              return (
+                <Button
+                  key={pageNum}
+                  variant={currentPage === pageNum ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => {
+                    setCurrentPage(pageNum)
+                    fetchData(pageNum)
+                  }}
+                  className={`px-3 py-1 ${
+                    currentPage === pageNum 
+                      ? 'bg-red-500 hover:bg-red-600 text-white' 
+                      : 'hover:bg-gray-100'
+                  }`}
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
           </div>
-        )}
+
+          {/* Next button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              if (currentPage < totalPages) {
+                setCurrentPage(currentPage + 1)
+                fetchData(currentPage + 1)
+              }
+            }}
+            disabled={currentPage === totalPages}
+            className='px-3 py-1'
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

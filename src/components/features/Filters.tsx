@@ -1,7 +1,6 @@
-import { BANGALORE_AREAS, PROPERTY_TYPES } from '@/constants'
-import useAccessToken from '@/hooks/useAccessToken'
+import { BANGALORE_AREAS, PROPERTY_TYPES, STATES, CITIES } from '@/constants'
 import { useApiStore } from '@/store/apiStore'
-import { formatRupee, formattedDate } from '@/utils'
+import { formatRupee, formattedDate, formattedEndOfDay } from '@/utils'
 import { useEffect, useState } from 'react'
 import DateComponent from '../Date'
 import MultiSelect from '../MultiSelect'
@@ -19,6 +18,17 @@ type PropertyTypeOption = {
   label: string
 }
 
+type StateOption = {
+  value: string
+  label: string
+}
+
+type CityOption = {
+  value: string
+  label: string
+  state: string
+}
+
 export default function Filters({ setIsOpen }: any) {
   const [filteredAreaOptions, setFilteredAreaOptions] = useState<AreaOption[]>(
     []
@@ -31,10 +41,12 @@ export default function Filters({ setIsOpen }: any) {
   )
   const [selectedPropertyTypeOptions, setSelectedPropertyTypeOptions] =
     useState<PropertyTypeOption[]>([])
-  const { accessToken } = useAccessToken()
   const [minPrice, setMinPrice] = useState<string>('')
   const [maxPrice, setMaxPrice] = useState<string>('')
   const [auctionId, setAuctionId] = useState('')
+  const [selectedState, setSelectedState] = useState<StateOption | null>(null)
+  const [selectedCity, setSelectedCity] = useState<CityOption | null>(null)
+  const [filteredCityOptions, setFilteredCityOptions] = useState<CityOption[]>([])
 
   // Submit Form
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -46,20 +58,17 @@ export default function Filters({ setIsOpen }: any) {
     setFilters({
       ...formFilters,
       auctionStartDate: formattedDate(auctionStartDate!),
-      auctionEndDate: formattedDate(auctionEndDate!),
+      auctionEndDate: formattedEndOfDay(auctionEndDate!),
       area: selectedAreaOptions.map((option) => option.value),
       propertyType: selectedPropertyTypeOptions.map((option) => option.value),
-      // minPrice: formFilters.minPrice
-      //   ? parseInt(formFilters.minPrice as string)
-      //   : null,
-      // maxPrice: formFilters.maxPrice
-      //   ? parseInt(formFilters.maxPrice as string)
-      //   : null,
-      minPrice: minPrice.replace(/,/g, ''),
-      maxPrice: maxPrice.replace(/,/g, ''),
+      state: selectedState?.value,
+      city: selectedCity?.value,
+      minPrice: minPrice ? minPrice.replace(/,/g, '') : '',
+      maxPrice: maxPrice ? maxPrice.replace(/,/g, '') : '',
     })
-    if (accessToken) fetchData(accessToken, 1)
   }
+
+  console.log({ formattedAuctionStartDate: formattedDate(auctionStartDate!) }, { formattedAuctionEndDate: formattedEndOfDay(auctionEndDate!) })
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (event.key === 'Enter') {
@@ -76,9 +85,11 @@ export default function Filters({ setIsOpen }: any) {
     setMinPrice('')
     setMaxPrice('')
     setAuctionId('')
+    setSelectedState(null)
+    setSelectedCity(null)
+    setFilteredCityOptions([])
     setFilters({})
     localStorage.removeItem('apiStore')
-    if (accessToken) fetchData(accessToken, 1)
   }
 
   // Area type
@@ -86,9 +97,13 @@ export default function Filters({ setIsOpen }: any) {
     setSelectedAreaOptions(selected)
   }
 
-  // Area search field
+  // Area search field - only show areas for Karnataka + Bangalore
   const handleAreaInputChange = (input: string) => {
-    if (input.length >= 2) {
+    if (
+      selectedState?.value === 'Karnataka' &&
+      selectedCity?.value === 'Bengaluru' &&
+      input.length >= 2
+    ) {
       setFilteredAreaOptions(
         BANGALORE_AREAS.filter((option) =>
           option.label.toLowerCase().includes(input.toLowerCase())
@@ -118,12 +133,50 @@ export default function Filters({ setIsOpen }: any) {
       setMinPrice(filters.minPrice?.toString() || '')
       setMaxPrice(filters.maxPrice?.toString() || '')
       setAuctionId(filters.auctionId?.toString() || '')
+      
+      // Set state and city from filters
+      if (filters.state) {
+        const stateOption = STATES.find(s => s.value === filters.state)
+        setSelectedState(stateOption || null)
+      }
+      if (filters.city) {
+        const cityOption = CITIES.find(c => c.value === filters.city)
+        setSelectedCity(cityOption || null)
+      }
     }
   }, [filters])
 
   // Property type
   const handlePropertyTypeSelectChange = (selected: PropertyTypeOption[]) => {
     setSelectedPropertyTypeOptions(selected)
+  }
+
+  // State selection
+  const handleStateSelectChange = (selected: StateOption | null) => {
+    setSelectedState(selected)
+    setSelectedCity(null) // Reset city when state changes
+    setFilteredCityOptions([]) // Clear city options
+    setSelectedAreaOptions([]) // Reset area when state changes
+  }
+
+  // City selection
+  const handleCitySelectChange = (selected: CityOption | null) => {
+    setSelectedCity(selected)
+    setSelectedAreaOptions([]) // Reset area when city changes
+  }
+
+  // City input change - filter cities based on selected state
+  const handleCityInputChange = (input: string) => {
+    if (selectedState && input.length >= 2) {
+      const filteredCities = CITIES.filter(
+        (city) =>
+          city.state === selectedState.value &&
+          city.label.toLowerCase().includes(input.toLowerCase())
+      )
+      setFilteredCityOptions(filteredCities)
+    } else {
+      setFilteredCityOptions([])
+    }
   }
 
   const handlePriceChange = (
@@ -170,19 +223,61 @@ export default function Filters({ setIsOpen }: any) {
 
         <hr className='border-gray-200 max-w-full  my-2' />
 
+        {/* State Selection */}
+        <div>
+          <MultiSelect
+            options={STATES}
+            placeholder='Select State'
+            onChange={(selected: StateOption[]) => handleStateSelectChange(selected[0] || null)}
+            value={selectedState ? [selectedState] : []}
+            name='state'
+            label='State'
+            id='state'
+            singleSelect={true}
+          />
+        </div>
+
+
+        {/* City Selection */}
+        <div>
+          <MultiSelect
+            options={filteredCityOptions}
+            placeholder={selectedState ? 'Search City' : 'Select State first'}
+            onInputChange={handleCityInputChange}
+            onChange={(selected: CityOption[]) => handleCitySelectChange(selected[0] || null)}
+            value={selectedCity ? [selectedCity] : []}
+            name='city'
+            label='City'
+            id='city'
+            singleSelect={true}
+            disabled={!selectedState}
+          />
+        </div>
+
+
         {/* Area Input */}
-        <MultiSelect
+        {selectedCity?.value === 'Bengaluru' && <MultiSelect
           options={filteredAreaOptions}
-          placeholder='Ex: HSR, Sarjapura'
+          placeholder={
+            selectedState?.value === 'Karnataka' && selectedCity?.value === 'Bengaluru'
+              ? 'Ex: HSR, Sarjapura'
+              : selectedState && selectedCity
+              ? 'No areas available for this city'
+              : 'Select State and City first'
+          }
           onInputChange={handleAreaInputChange}
           onChange={handleAreaSelectChange}
           value={selectedAreaOptions}
           name='area'
           label='Area'
           id='area'
-        />
+          disabled={
+            !selectedState || 
+            !selectedCity || 
+            !(selectedState.value === 'Karnataka' && selectedCity.value === 'Bengaluru')
+          }
+        />}
 
-        <hr className='border-gray-200 max-w-full  my-2' />
 
         {/* Property Type */}
         <MultiSelect
@@ -194,7 +289,6 @@ export default function Filters({ setIsOpen }: any) {
           label='Property Type'
           id='propertyType'
         />
-        <hr className='border-gray-200 max-w-full my-2' />
         {/* Date Inputs */}
         <div>
           <DateComponent
@@ -248,7 +342,9 @@ export default function Filters({ setIsOpen }: any) {
         filters.auctionStartDate ||
         filters.minPrice ||
         filters.maxPrice ||
-        filters.propertyType ? (
+        filters.propertyType ||
+        filters.state ||
+        filters.city ? (
           // selectedAreaOptions.length > 0
           <Button
             variant='link'

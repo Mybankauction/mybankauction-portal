@@ -1,16 +1,30 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Maintenance from './components/Maintenance'
-import ProtectedRoute from './components/ProtectedRoute'
-import useAccessToken from './hooks/useAccessToken'
-import Account from './pages/Account'
 import IndexLanding from './landing_page/IndexLanding'
 import ItemDetails from './pages/ItemDetails'
-import Login from './pages/Login'
 import NotFound from './pages/NotFound'
-import Signup from './pages/Signup'
+import Home from './pages/Home'
+import { getAuthToken } from './utils/api'
+import Account from './pages/Account'
+
+function RequireAuth({ children }: { children: JSX.Element }) {
+  const token = getAuthToken()
+  if (!token) {
+    return <Navigate to='/' replace />
+  }
+  return children
+}
+
+function RedirectIfAuth({ children }: { children: JSX.Element }) {
+  const token = getAuthToken()
+  if (token) {
+    return <Navigate to='/properties' replace />
+  }
+  return children
+}
 
 export default function App() {
   // useAccessToken()
@@ -30,19 +44,13 @@ export default function App() {
     <div className=''>
       <div className=''>
         <BrowserRouter>
-          <Routes>
-            {/* <Route element={<Maintenance />} path='*' /> */}
-            <Route element={<ProtectedRoute />}>
-              <Route element={<ItemDetails />} path='/properties/:id' />
-              <Route element={<Account />} path='/account' />
-            </Route>
-            <Route element={<IndexLanding />} path='/' />
-            <Route element={<Login />} path='/login' />
-            <Route element={<Signup />} path='/signup' />
+        <Routes>
+            <Route element={<RequireAuth><ItemDetails /></RequireAuth>} path='/properties/:id' />
+            <Route element={<RequireAuth><Home /></RequireAuth>} path='/properties' />
+            <Route element={<RedirectIfAuth><IndexLanding /></RedirectIfAuth>} path='/' />
+            <Route element={<RequireAuth><Account /></RequireAuth>} path='/account' />
             <Route element={<NotFound />} path='*' />
-          </Routes>
-          {/* <hr className='my-16 border-gray-200 max-w-[80rem] mx-auto' /> */}
-          {/* <Footer /> */}
+        </Routes>
         </BrowserRouter>
       </div>
     </div>

@@ -1,9 +1,9 @@
 import React from 'react'
 
 const ContactUs: React.FC = () => {
-  const phone = '7996000659'
+  const phone = '9364111642'
   const email = 'hr@mybankauction.com'
-  const address = '2rd floor Awfis work space, Kudlu Gate, Hosur Rd, Bengaluru, Karnataka 560068'
+  const address = '2nd Floor, Awfis Workspace, Kudlu Gate, Hosur Rd, Bengaluru, Karnataka 560068'
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
 
   const cards = [
@@ -18,7 +18,7 @@ const ContactUs: React.FC = () => {
     },
     {
       title: `Call us at ${phone}`,
-      desc: 'Available 10am-7pm CT, 6 days a week',
+      desc: 'Available 10 AM–7 PM CT, 6 days a week.',
       cta: 'Call us',
       href: `tel:${phone}`,
       icon: (
@@ -51,14 +51,14 @@ const ContactUs: React.FC = () => {
         <h2 className="text-2xl md:text-3xl font-bold text-center text-slate-900 mb-10">Contact Us</h2>
         <div className="grid md:grid-cols-2 gap-6">
           {cards.map((card, i) => (
-            <div key={i} className="flex items-start gap-4 bg-slate-200 rounded-md p-6">
+            <a target="_blank" rel="noopener noreferrer" href={card.href} key={i} className="flex items-start gap-4 bg-slate-200 rounded-md p-6">
               <div className="shrink-0">{card.icon}</div>
               <div>
                 <h3 className="font-semibold text-slate-900">{card.title}</h3>
                 <p className="text-slate-700 text-sm">{card.desc}</p>
-                <a href={card.href} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-primary font-medium">{card.cta}</a>
+                <span className="mt-2 inline-block text-primary font-medium">{card.cta}</span>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

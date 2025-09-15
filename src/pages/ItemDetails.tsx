@@ -1,28 +1,53 @@
+import Header from '@/components/Header'
 import { Button } from '@/components/ui/button'
-import { API_BASE_URL, API_ENDPOINT } from '@/conf'
-import useAccessToken from '@/hooks/useAccessToken'
-import { Data } from '@/types'
 import { convertDateToReadableFormat, formatRupee } from '@/utils'
 import { ArrowLeft, CalendarDays, Heart, LandPlot, MapPin } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { MagnifyingGlass } from 'react-loader-spinner'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { getAuthToken } from '@/utils/api'
+
+// Define the data type based on FastAPI backend model
+interface PropertyData {
+  _id: string
+  account_name: string
+  auction_id: string
+  bank_name: string
+  emd: string
+  branch_name: string
+  service_provider: string
+  reserve_price: number
+  contact_details: string
+  description: string
+  state: string
+  city: string
+  area: string
+  borrower_name: string
+  property_type: string
+  auction_type: string
+  sub_end: string
+  sale_notice: string
+  asset_category?: string
+  outstanding_amount?: string
+  auction_start_date: string
+  auction_end_date: string
+  [key: string]: any
+}
 
 export default function ItemDetails() {
-  const { accessToken, refreshToken } = useAccessToken()
   const { id } = useParams()
-  const [data, setData] = useState<Data>()
+  const [data, setData] = useState<PropertyData>()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const [isInterested, setIsInterested] = useState(false) // Initial button color
+  const [isInterested, setIsInterested] = useState(false)
 
   useEffect(() => {
     const existingDeals = JSON.parse(
       localStorage.getItem('interestedDeals') || '[]'
     )
     const dealExists = existingDeals.some(
-      (deal: any) => deal.data[0].Account_Name.id === data?.id
+      (deal: any) => deal.auction_id === data?.auction_id
     )
 
     setIsInterested(dealExists ? true : false)
@@ -31,108 +56,74 @@ export default function ItemDetails() {
   async function fetchDetails() {
     try {
       setIsLoading(true)
-      const res = await fetch(
-        `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=Auction_id:equals:${id}`,
-        {
-          headers: {
-            Authorization: `Zoho-oauthtoken ${accessToken}`,
-          },
-        }
-      )
-      if (res.status === 401) {
-        refreshToken()
-        console.log('its 401 ', accessToken)
+      const token = getAuthToken()
+      const res = await fetch(`http://127.0.0.1:8000/filtered.properties?auction_id=${id}` , {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      })
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`)
       }
-      if (res.status === 204) {
-        navigate('*', { replace: true })
-        return
+      
+      const response = await res.json()
+      
+      if (response.status === 200 && response.data) {
+        setData(response.data)
+      } else {
+        toast.error('Property not found')
+        navigate('/', { replace: true })
       }
-      const _data = await res.json()
-      setData(_data.data[0])
     } catch (error) {
-      // @ts-ignore
-      toast.error(error)
-      setIsLoading(false)
+      console.error('Error fetching property details:', error)
+      toast.error('Failed to load property details')
+      navigate('/', { replace: true })
     } finally {
       setIsLoading(false)
     }
   }
 
-  const fetchAccountIdDetails = async (id: string | undefined) => {
-    const res = await fetch(
-      `${API_BASE_URL}/${API_ENDPOINT.SEARCH}?criteria=Auction_id:equals:${id}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Zoho-oauthtoken ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-    const data = await res.json()
-    return data.data[0]
-  }
   const handleInterestedButtonClick = async () => {
-    const user = JSON.parse(localStorage.getItem('user') || 'defaultContactId')
     const isLoggedin = localStorage.getItem('isLoggedin')
 
-    if (!isLoggedin) {
+    if (!isLoggedin || isLoggedin !== 'true') {
       toast.error('You need to first login')
       return
     }
 
-    if (isLoggedin !== 'true') {
-      toast.error('You need to first login')
+    if (!data) {
+      toast.error('Property data not available')
       return
     }
 
     setIsInterested(true)
-    const contactId = user.id
-    const userName = user.Name1
-    const acc = await fetchAccountIdDetails(id)
-
-    const newDeal = {
-      id: acc.id,
-      data: [
-        {
-          Deal_Name: `${acc.Account_Name}-${userName}`,
-          Stage: 'Physical Property Scan',
-          Account_Name: {
-            id: acc.id,
-          },
-          Contact_Name: {
-            id: contactId,
-          },
-        },
-      ],
+    
+    const interestedProperty = {
+      auction_id: data.auction_id,
+      property_type: data.property_type,
+      city: data.city,
+      area: data.area,
+      reserve_price: data.reserve_price,
+      bank_name: data.bank_name,
+      auction_start_date: data.auction_start_date,
+      auction_end_date: data.auction_end_date,
+      interested_at: new Date().toISOString()
     }
-
-    const res = await fetch(`${API_BASE_URL}/${API_ENDPOINT.DEAL}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Zoho-oauthtoken ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newDeal),
-    })
-
-    const _data = await res.json()
-    // console.log(_data)
 
     const existingDeals = JSON.parse(
       localStorage.getItem('interestedDeals') || '[]'
     )
 
-    // Check for duplicates based on Account_Name id
+    // Check for duplicates based on auction_id
     if (
       !existingDeals.some(
-        (deal: any) =>
-          deal.data[0].Account_Name.id === newDeal.data[0].Account_Name.id
+        (deal: any) => deal.auction_id === interestedProperty.auction_id
       )
     ) {
-      existingDeals.push(newDeal)
+      existingDeals.push(interestedProperty)
       localStorage.setItem('interestedDeals', JSON.stringify(existingDeals))
-      // console.log('Updated deals in localStorage:', existingDeals)
+      toast.success('Added to your interested properties!')
+    } else {
+      toast.success('Property already in your interested list!')
     }
   }
 
@@ -141,7 +132,9 @@ export default function ItemDetails() {
   }, [])
 
   return (
-    <div className='max-w-[980px] mx-auto pb-20'>
+    <>
+    <Header/>
+    <div className='max-w-[1300px] mt-5 mx-auto pb-20'>
       {isLoading ? (
         <div className='mx-auto mt-10 h-screen'>
           <MagnifyingGlass
@@ -160,7 +153,7 @@ export default function ItemDetails() {
       ) : (
         <>
           <div>
-            <Link to={'/'}>
+            <Link to={'/properties'}>
               <Button variant={'link'} className='text-red-400'>
                 <ArrowLeft />
                 Go back
@@ -170,10 +163,8 @@ export default function ItemDetails() {
           <div className='border p-4 bg-slate-100 rounded-md'>
             <div className='text-2xl font-bold flex items-center justify-between'>
               <p>
-                {/* {data?.Bank_Name} Auctions for {data?.Property_Type} in{' '}
-                {data?.Area?.name ?? 'N/A'}, {data?.City} */}
-                Auction for {data?.Property_Type} in {data?.Area ?? 'N/A'},{' '}
-                {data?.City.name} for ₹{formatRupee(data?.Reserve_price! ?? '')}
+                Auction for {data?.["Property Type"]} in {data?.["Area"] ?? 'N/A'},{' '}
+                {data?.["City"]} for ₹{formatRupee(data?.["Reserve Price"]?.toString() ?? '')}
               </p>
               <button
                 onClick={handleInterestedButtonClick}
@@ -196,22 +187,21 @@ export default function ItemDetails() {
                 <p>
                   <LandPlot />
                 </p>
-                <p>{data?.Asset_Category}</p>
+                <p>{data?.["AssetCategory"] || 'N/A'}</p>
               </div>
               <div className='flex items-center gap-x-2'>
                 <p>
                   <MapPin />
                 </p>
-
-                <p>{data?.City.name}</p>
+                <p>{data?.["City"]}</p>
               </div>
               <div className='flex items-center gap-x-2'>
                 <p>
                   <CalendarDays />
                 </p>
                 <p>
-                  {data?.Auction_start_date
-                    ? convertDateToReadableFormat(data?.Auction_start_date)
+                  {data?.auction_start_date
+                    ? convertDateToReadableFormat(data?.auction_start_date)
                     : 'N/A'}
                 </p>
               </div>
@@ -220,30 +210,30 @@ export default function ItemDetails() {
           {/*  */}
           <div className='p-4 bg-slate-100 mt-5 rounded-md justify-between flex-wrap gap-5'>
             <h1 className='font-bold text-xl pb-4 underline'>Bank Details:</h1>
-            <div className='flex items-center gap-6 flex-wrap'>
+            <div className='flex items-center gap-20 flex-wrap'>
               <div className='*:py-2'>
                 <div>
                   <span className='font-bold'>Bank Name:</span>{' '}
-                  {data?.Bank_Name}
+                  {data?.["Bank Name"]}
                 </div>
                 <div>
                   <span className='font-bold'>EMD:</span> ₹
-                  {formatRupee(data?.Earnest_Money_Deposit ?? '')}
+                  {formatRupee(data?.["EMD"] ?? '')}
                 </div>
                 <div>
                   <span className='font-bold'>Branch Name:</span>{' '}
-                  {data?.Branch_Name}
+                  {data?.["Branch Name"]}
                 </div>
               </div>
               <div className='*:py-2'>
                 <p>
                   <span className='font-bold'>Reserve Price:</span> ₹
-                  {formatRupee(data?.Reserve_price ?? '')}
+                  {formatRupee(data?.["Reserve Price"]?.toString() ?? '')}
                 </p>
                 <p>
-                  <span className='font-bold'>Current Price: </span>₹
-                  {data?.Current_market_price
-                    ? formatRupee(data?.Current_market_price ?? '')
+                  <span className='font-bold'>Outstanding Amount: </span>₹
+                  {data?.outstanding_amount
+                    ? formatRupee(data?.outstanding_amount ?? '')
                     : 'N/A'}
                 </p>
               </div>
@@ -254,47 +244,45 @@ export default function ItemDetails() {
             <h1 className='font-bold text-xl pb-4 underline'>
               Property Details:
             </h1>
-            <div className='flex items-center gap-6 flex-wrap'>
+            <div className='flex items-center gap-20 flex-wrap'>
               <div className='*:py-2'>
                 <div>
                   <span className='font-bold'>Auction Id:</span>{' '}
-                  {data?.Auction_id}
+                  {data?.["Auction Id"] || 'N/A'}
                 </div>
                 <div>
                   <span className='font-bold'>Borrower Name:</span>{' '}
-                  {data?.Borrower_Name}
+                  {data?.["Borrower Name"] || 'N/A'}
                 </div>
                 <div>
                   <span className='font-bold'>Asset Category:</span>{' '}
-                  {data?.Asset_Category}
+                  {data?.["AssetCategory"] || 'N/A'}
                 </div>
                 <div>
                   <span className='font-bold'>Property Type:</span>{' '}
-                  {data?.Property_Type}
+                  {data?.["Property Type"]}
                 </div>
                 <div>
                   <span className='font-bold'>Auction Type:</span>{' '}
-                  {data?.Auction_Type}
+                  {data?.["Auction Type"]}
                 </div>
               </div>
               <div className='*:py-2'>
                 <p>
-                  <span className='font-bold'>Auction Start Time:</span>{' '}
-                  {data?.Auction_start_date
-                    ? convertDateToReadableFormat(data?.Auction_start_date)
+                  <span className='font-bold'>Auction Start Date:</span>{' '}
+                  {data?.auction_start_date
+                    ? convertDateToReadableFormat(data?.auction_start_date)
                     : 'N/A'}
                 </p>
                 <p>
-                  <span className='font-bold'>Auction End Time:</span>{' '}
-                  {convertDateToReadableFormat(data?.Auction_end_date)}
+                  <span className='font-bold'>Auction End Date:</span>{' '}
+                  {data?.auction_start_date
+                    ? convertDateToReadableFormat(data?.auction_start_date)
+                    : 'N/A'}
                 </p>
                 <p>
-                  <span className='font-bold'>
-                    Application Submission Date:
-                  </span>{' '}
-                  {convertDateToReadableFormat(
-                    data?.Last_date_to_submit_the_tender_form_for_theauction
-                  )}
+                  <span className='font-bold'>Service Provider:</span>{' '}
+                  {data?.["Service Provider"] || 'N/A'}
                 </p>
               </div>
             </div>
@@ -306,19 +294,24 @@ export default function ItemDetails() {
             </h1>
 
             <p>
-              {data?.Property_Description
-                ? data.Property_Description
-                : 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dignissimos obcaecati praesentium magnam perferendis deserunt maxime aliquam iste facilis perspiciatis facere.'}
+              {data?.["Description"]
+                ? data.description
+                : 'No description available for this property.'}
             </p>
             <div className='flex items-center justify-between *:py-2'>
               <p>
-                <span className='font-bold'>State:</span> {data?.State}
+                <span className='font-bold'>State:</span> {data?.["State"]}
               </p>
               <p>
-                <span className='font-bold'>City:</span> {data?.City.name}
+                <span className='font-bold'>City:</span> {data?.["City"]}
               </p>
               <p>
-                <span className='font-bold'>Area:</span> {data?.Area}
+                <span className='font-bold'>Area:</span> {data?.["Area"]}
+              </p>
+            </div>
+            <div className='mt-4'>
+              <p>
+                <span className='font-bold'>Contact Details:</span> {data?.["Contact Details"] || 'N/A'}
               </p>
             </div>
           </div>
@@ -336,5 +329,7 @@ export default function ItemDetails() {
         </>
       )}
     </div>
+    </>
   )
 }
+

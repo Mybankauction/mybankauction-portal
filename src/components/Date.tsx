@@ -18,7 +18,8 @@ export default function DateComponent({
   if (date) {
     // console.log(JSON.stringify(date, null, 2))
   }
-  let formattedDate = date && format(new Date(date), 'PPP')
+  let formattedDate = date && format(new Date(date), 'P')
+  console.log("formattedDate",formattedDate)
   return (
     <>
       <Label htmlFor={label} className=''>
@@ -43,7 +44,6 @@ export default function DateComponent({
             mode='single'
             selected={date}
             onSelect={setDate}
-            initialFocus
           />
           <div className='flex'>
             <button

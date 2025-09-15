@@ -5,6 +5,9 @@ import HeroImg2 from "../assets/pexels-binyaminmellish-186077.jpg"
 import HeroImg3 from "../assets/pexels-binyaminmellish-106399.jpg"
 import HeroImg4 from "../assets/pexels-sebastians-731082.jpg"
 import { Link } from 'react-router-dom'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import LoginForm from '@/components/auth/LoginForm'
+import SignupForm from '@/components/auth/SignupForm'
 
 // xl:[background-position-y:-180px]
 const Hero: React.FC = () => {
@@ -18,6 +21,9 @@ const Hero: React.FC = () => {
 
     return () => clearInterval(intervalId)
   }, [heroImages.length])
+
+  const [authOpen, setAuthOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login')
 
   return (
     <div
@@ -33,17 +39,47 @@ const Hero: React.FC = () => {
           Smart Way to Buy Auctioned Properties in India
         </h1>
         <p className="text-lg md:text-xl mb-8 text-gray-200">
-          MyBankAuction makes navigating bank property auctions simple, transparent, and reliable with expert support at every step.
-        </p>
+        MyBankAuction helps you find, bid, and secure bank-auctioned properties with ease — simple, transparent, and fully supported every step of the way.</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to={'/login'}
+          <button
+            onClick={() => { setActiveTab('login'); setAuthOpen(true) }}
             className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 bg-[#E3450A] text-white hover:bg-[#E3450A]/90 px-8 py-6 text-lg w-full sm:w-auto"
           >
             Browse Properties
-          </Link>
+          </button>
         </div>
         </div>
       </div>
+      <Dialog open={authOpen} onOpenChange={setAuthOpen}>
+        <DialogContent className='max-w-lg w-full'>
+          <DialogHeader>
+            <DialogTitle className='text-lg font-bold'>
+              {activeTab === 'login' ? 'Login' : 'Sign Up'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className='flex gap-2 mb-4'>
+            <button
+              onClick={() => setActiveTab('login')}
+              className={`px-4 py-2 rounded border ${activeTab === 'login' ? 'bg-[#E34732] text-white border-[#E34732]' : 'bg-white text-neutral-800'}`}
+            >
+              Login
+            </button>
+            <button
+              onClick={() => setActiveTab('signup')}
+              className={`px-4 py-2 rounded border ${activeTab === 'signup' ? 'bg-[#E34732] text-white border-[#E34732]' : 'bg-white text-neutral-800'}`}
+            >
+              Sign Up
+            </button>
+          </div>
+          <div>
+            {activeTab === 'login' ? (
+              <LoginForm onSuccess={() => setAuthOpen(false)} />
+            ) : (
+              <SignupForm onSuccess={() => setAuthOpen(false)} />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

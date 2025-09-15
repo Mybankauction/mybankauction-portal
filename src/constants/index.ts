@@ -7,16 +7,16 @@ export const NAV_LINKS = [
     name:"About",
     id:"about"
   },{
-    name:"Why-us",
+    name:"Why Choose Us",
     id:"why-us"
   },{
-    name: "Process",
+    name: "How It Works",
     id: "process"
   },{
-    name:"Faq",
+    name:"FAQs",
     id:"faq"
   },{
-    name: "Contact",
+    name: "Contact Us",
     id: "contact"
   }
   // {
@@ -54,6 +54,92 @@ export const PROPERTY_TYPES = [
     label: 'Plot',
     value: 'Plot',
   },
+]
+
+export const STATES = [
+  { value: 'Karnataka', label: 'Karnataka' },
+  { value: 'Tamil Nadu', label: 'Tamil Nadu' },
+  { value: 'Maharashtra', label: 'Maharashtra' },
+  { value: 'Telangana', label: 'Telangana' },
+  { value: 'Andhra Pradesh', label: 'Andhra Pradesh' },
+  { value: 'Kerala', label: 'Kerala' },
+  { value: 'Delhi', label: 'Delhi' },
+  { value: 'Haryana', label: 'Haryana' },
+  { value: 'Punjab', label: 'Punjab' },
+  { value: 'Rajasthan', label: 'Rajasthan' },
+]
+
+export const CITIES = [
+  // Karnataka cities
+  { value: 'Bengaluru', label: 'Bengaluru', state: 'Karnataka' },
+  { value: 'Mysuru', label: 'Mysuru', state: 'Karnataka' },
+  { value: 'Hubli', label: 'Hubli', state: 'Karnataka' },
+  { value: 'Mangalore', label: 'Mangalore', state: 'Karnataka' },
+  { value: 'Belgaum', label: 'Belgaum', state: 'Karnataka' },
+  { value: 'Gulbarga', label: 'Gulbarga', state: 'Karnataka' },
+  { value: 'Davanagere', label: 'Davanagere', state: 'Karnataka' },
+  { value: 'Bellary', label: 'Bellary', state: 'Karnataka' },
+  { value: 'Bijapur', label: 'Bijapur', state: 'Karnataka' },
+  { value: 'Shimoga', label: 'Shimoga', state: 'Karnataka' },
+  
+  // Tamil Nadu cities
+  { value: 'Chennai', label: 'Chennai', state: 'Tamil Nadu' },
+  { value: 'Coimbatore', label: 'Coimbatore', state: 'Tamil Nadu' },
+  { value: 'Madurai', label: 'Madurai', state: 'Tamil Nadu' },
+  { value: 'Tiruchirappalli', label: 'Tiruchirappalli', state: 'Tamil Nadu' },
+  { value: 'Salem', label: 'Salem', state: 'Tamil Nadu' },
+  { value: 'Tirunelveli', label: 'Tirunelveli', state: 'Tamil Nadu' },
+  { value: 'Tiruppur', label: 'Tiruppur', state: 'Tamil Nadu' },
+  { value: 'Erode', label: 'Erode', state: 'Tamil Nadu' },
+  { value: 'Vellore', label: 'Vellore', state: 'Tamil Nadu' },
+  { value: 'Thoothukudi', label: 'Thoothukudi', state: 'Tamil Nadu' },
+  { value: 'Dindigul', label: 'Dindigul', state: 'Tamil Nadu' },
+  { value: 'Thanjavur', label: 'Thanjavur', state: 'Tamil Nadu' },
+  { value: 'Ranipet', label: 'Ranipet', state: 'Tamil Nadu' },
+  { value: 'Sivakasi', label: 'Sivakasi', state: 'Tamil Nadu' },
+  { value: 'Karur', label: 'Karur', state: 'Tamil Nadu' },
+  { value: 'Udhagamandalam', label: 'Udhagamandalam', state: 'Tamil Nadu' },
+  { value: 'Hosur', label: 'Hosur', state: 'Tamil Nadu' },
+  { value: 'Nagercoil', label: 'Nagercoil', state: 'Tamil Nadu' },
+  { value: 'Kanchipuram', label: 'Kanchipuram', state: 'Tamil Nadu' },
+  { value: 'Cuddalore', label: 'Cuddalore', state: 'Tamil Nadu' },
+  { value: 'Kumbakonam', label: 'Kumbakonam', state: 'Tamil Nadu' },
+  { value: 'Tiruvannamalai', label: 'Tiruvannamalai', state: 'Tamil Nadu' },
+  { value: 'Pollachi', label: 'Pollachi', state: 'Tamil Nadu' },
+  { value: 'Rajapalayam', label: 'Rajapalayam', state: 'Tamil Nadu' },
+  { value: 'Sivaganga', label: 'Sivaganga', state: 'Tamil Nadu' },
+  { value: 'Pudukkottai', label: 'Pudukkottai', state: 'Tamil Nadu' },
+  { value: 'Vaniyambadi', label: 'Vaniyambadi', state: 'Tamil Nadu' },
+  { value: 'Theni', label: 'Theni', state: 'Tamil Nadu' },
+  { value: 'Nagapattinam', label: 'Nagapattinam', state: 'Tamil Nadu' },
+  { value: 'Gudiyatham', label: 'Gudiyatham', state: 'Tamil Nadu' },
+  { value: 'Krishnagiri', label: 'Krishnagiri', state: 'Tamil Nadu' },
+  { value: 'Dharmapuri', label: 'Dharmapuri', state: 'Tamil Nadu' },
+  { value: 'Tuticorin', label: 'Tuticorin', state: 'Tamil Nadu' },
+  
+  // Maharashtra cities
+  { value: 'Mumbai', label: 'Mumbai', state: 'Maharashtra' },
+  { value: 'Pune', label: 'Pune', state: 'Maharashtra' },
+  { value: 'Nagpur', label: 'Nagpur', state: 'Maharashtra' },
+  { value: 'Thane', label: 'Thane', state: 'Maharashtra' },
+  { value: 'Nashik', label: 'Nashik', state: 'Maharashtra' },
+  { value: 'Aurangabad', label: 'Aurangabad', state: 'Maharashtra' },
+  { value: 'Solapur', label: 'Solapur', state: 'Maharashtra' },
+  { value: 'Amravati', label: 'Amravati', state: 'Maharashtra' },
+  { value: 'Kolhapur', label: 'Kolhapur', state: 'Maharashtra' },
+  { value: 'Sangli', label: 'Sangli', state: 'Maharashtra' },
+  
+  // Telangana cities
+  { value: 'Hyderabad', label: 'Hyderabad', state: 'Telangana' },
+  { value: 'Warangal', label: 'Warangal', state: 'Telangana' },
+  { value: 'Nizamabad', label: 'Nizamabad', state: 'Telangana' },
+  { value: 'Khammam', label: 'Khammam', state: 'Telangana' },
+  { value: 'Karimnagar', label: 'Karimnagar', state: 'Telangana' },
+  { value: 'Ramagundam', label: 'Ramagundam', state: 'Telangana' },
+  { value: 'Mahbubnagar', label: 'Mahbubnagar', state: 'Telangana' },
+  { value: 'Nalgonda', label: 'Nalgonda', state: 'Telangana' },
+  { value: 'Adilabad', label: 'Adilabad', state: 'Telangana' },
+  { value: 'Suryapet', label: 'Suryapet', state: 'Telangana' },
 ]
 
 export const BANGALORE_AREAS = [

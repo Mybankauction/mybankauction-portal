@@ -52,21 +52,21 @@ const FAQ: React.FC = () => {
             return (
               <div
                 key={idx}
-                className={`rounded-lg p-4 transition-all border ${
+                onClick={() => setOpenIndex(isOpen ? null : idx)}
+                aria-expanded={isOpen}
+                className={`rounded-lg p-4 transition-all border cursor-pointer ${
                   isOpen
                     ? 'bg-slate-300 shadow-md border-[#E34732]'
                     : 'bg-auction-light-gray border-slate-300 hover:bg-slate-300 hover:border-[#E34732]'
                 }`}
               >
-                <button
+                <div
                   className="w-full text-left flex items-start gap-3"
-                  onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  aria-expanded={isOpen}
                 >
                   <span className="text-auction-gold font-semibold text-black">{idx + 1}.</span>
                   <span className="font-medium text-slate-900">{item.question}</span>
                   <span className={`text-black ml-auto transition-transform ${isOpen ? 'rotate-90' : ''}`}>›</span>
-                </button>
+                </div>
                 {isOpen && (
                   <div className="mt-3 text-slate-800">
                     <p>{item.answer}</p>
