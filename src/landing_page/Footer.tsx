@@ -1,7 +1,7 @@
 export default function Footer() {
   const phone = '9364111642'
   const email = 'hr@mybankauction.com'
-  const address = '2nd Floor, Awfis Workspace, Kudlu Gate, Hosur Rd, Bengaluru, Karnataka 560068'
+  const address = 'Kudlu Gate, Hosur Rd, Bengaluru, Karnataka 560068'
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
   return (
     <footer className=" bg-neutral-900 text-neutral-200">

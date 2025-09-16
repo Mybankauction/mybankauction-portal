@@ -3,7 +3,7 @@ import React from 'react'
 const ContactUs: React.FC = () => {
   const phone = '9364111642'
   const email = 'hr@mybankauction.com'
-  const address = '2nd Floor, Awfis Workspace, Kudlu Gate, Hosur Rd, Bengaluru, Karnataka 560068'
+  const address = 'Kudlu Gate, Hosur Rd, Bengaluru, Karnataka 560068'
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
 
   const cards = [
