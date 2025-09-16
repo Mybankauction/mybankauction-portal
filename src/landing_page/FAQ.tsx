@@ -9,7 +9,7 @@ const items: FaqItem[] = [
   {
     question: 'What is MyBankAuction.com?',
     answer:
-      "It’s a platform under Simple Stone that connects buyers with bank auction and distressed properties across India.",
+      "It’s a platform under Simple Stone Assets & Services Pvt. Ltd., that connects buyers with bank auction and distressed properties across India.",
   },
   {
     question: 'Are these properties safe to buy?',
