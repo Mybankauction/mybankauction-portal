@@ -233,12 +233,7 @@ export default function ItemDetails() {
                   <span className='font-bold'>Reserve Price:</span> ₹
                   {formatRupee(data?.["Reserve Price"]?.toString() ?? '')}
                 </p>
-                <p>
-                  <span className='font-bold'>Outstanding Amount: </span>₹
-                  {data?.outstanding_amount
-                    ? formatRupee(data?.outstanding_amount ?? '')
-                    : 'N/A'}
-                </p>
+                
               </div>
             </div>
           </div>
@@ -313,9 +308,7 @@ export default function ItemDetails() {
               </p>
             </div>
             <div className='mt-4'>
-              <p>
-                <span className='font-bold'>Contact Details:</span> {data?.["Contact Details"] || 'N/A'}
-              </p>
+              
             </div>
           </div>
           {/*  */}
