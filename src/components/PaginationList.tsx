@@ -81,7 +81,7 @@ const PaginatedList = () => {
 
       {/* Pagination */}
       {!loading && Array.isArray(paginatedData) && paginatedData.length > 0 && totalPages > 1 && (
-        <div className='flex justify-center items-center gap-2 mt-8'>
+        <div className='flex justify-center items-center gap-2 my-8'>
           {/* Previous button */}
           <Button
             variant="outline"
