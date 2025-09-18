@@ -104,12 +104,15 @@ export const useApiStore = create<ApiStoreState>()(
           })
 
           const endpoint = hasAnyFilters ? 'filtered.properties' : 'properties'
-          const url = `http://127.0.0.1:8000/${endpoint}?${queryParams.toString()}`
+          const url = `https://mybankauction-backend-289962944772.us-east1.run.app/${endpoint}?${queryParams.toString()}`
 
           const token = getAuthToken()
           const response = await fetch(url, {
-            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+            headers: token ? { Authorization: `${token}` } : undefined,
           })
+
+          console.log(response);
+          
 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)

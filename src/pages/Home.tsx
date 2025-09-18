@@ -24,6 +24,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Filter as FilterIcon } from 'lucide-react'
 
 import { useState } from 'react'
 
@@ -34,26 +35,30 @@ export default function Home() {
       {/* Main Layout */}
       <Header />
 
-      <div className='mx-auto flex mt-10 flex-col gap-1 gap-y-5 items-center lg:items-start justify-center lg:flex-row'>
+      <div className='mx-auto flex mt-2 flex-col gap-1 gap-y-5 items-center lg:items-start justify-center lg:flex-row'>
         {/* Filters for Large Screens */}
-        <div className=''>
+        <div className='hidden lg:block'>
           <Filters />
         </div>
 
-        {/* Filters in Modal for Small Screens */}
-        {/* <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger className='lg:hidden px-4 py-2 rounded'>
-            <Button variant={'outline'} className='max-w-16 min-w-52'>
-              Search
+        {/* Filters in Dialog for Mobile/Tablet */}
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogTrigger className='lg:hidden' asChild>
+            <Button
+              type='button'
+              className='fixed bottom-6 right-6 z-50 rounded-full h-14 w-14 p-0 shadow-lg lg:hidden'
+              variant={'default'}
+            >
+              <FilterIcon className='h-6 w-6' />
             </Button>
           </DialogTrigger>
-          <DialogContent className='w-fit h-full max-w-none lg:max-w-fit flex flex-col overflow-y-scroll pb-11 flex-1 lg:h-auto'>
+          <DialogContent className='w-full h-[90vh] max-w-none lg:max-w-fit flex flex-col overflow-y-auto lg:h-auto'>
             <DialogHeader>
               <DialogTitle>Filters</DialogTitle>
             </DialogHeader>
             <Filters setIsOpen={setIsOpen} />
           </DialogContent>
-        </Dialog> */}
+        </Dialog>
         <PaginatedList />
       </div>
     </>

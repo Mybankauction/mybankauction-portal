@@ -1,5 +1,5 @@
 import useAuth from '@/hooks/useAuth'
-import { UserRound } from 'lucide-react'
+import { UserRound, Heart } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { NAV_LINKS } from '../constants'
 import { Image } from '../utils/images'
@@ -99,11 +99,18 @@ export default function Header() {
           </Link>
           <div className='hidden max-[1250px]:block p-2'>
             {isLoggedIn ? (
-              <Link to='/account'>
-                <div className='border border-red-500 rounded-full p-2 bg-white/10 text-white hover:bg-auction-gold hover:text-auction-navy'>
-                  <UserRound color='#E34732'/>
-                </div>
-              </Link>
+              <div className='flex items-center gap-3'>
+                <Link to='/interested-properties'>
+                  <div className='border border-red-500 rounded-full p-2 bg-white/10 text-white hover:bg-auction-gold hover:text-auction-navy'>
+                    <Heart color='#E34732'/>
+                  </div>
+                </Link>
+                <Link to='/account'>
+                  <div className='border border-red-500 rounded-full p-2 bg-white/10 text-white hover:bg-auction-gold hover:text-auction-navy'>
+                    <UserRound color='#E34732'/>
+                  </div>
+                </Link>
+              </div>
             ) : (
               <Drawer>
                 <DrawerTrigger aria-label='Open menu'>
@@ -164,11 +171,18 @@ export default function Header() {
         <div className='hidden min-[1250px]:block'>
           <div className='hidden min-[1250px]:flex items-center gap-6 mt-4 min-[1250px]:mt-0 w-full min-[1250px]:w-auto justify-end'>
             {isLoggedIn ? (
-              <Link to='/account'>
-                <div className='border border-red-500 rounded-full p-2 bg-white/10 text-white hover:bg-auction-gold hover:text-auction-navy'>
-                  <UserRound color='#E34732'/>
-                </div>
-              </Link>
+              <div className='flex items-center gap-3'>
+                <Link to='/interested-properties'>
+                  <div className='border border-red-500 rounded-full p-2 bg-white/10 text-white hover:bg-auction-gold hover:text-auction-navy'>
+                    <Heart color='#E34732'/>
+                  </div>
+                </Link>
+                <Link to='/account'>
+                  <div className='border border-red-500 rounded-full p-2 bg-white/10 text-white hover:bg-auction-gold hover:text-auction-navy'>
+                    <UserRound color='#E34732'/>
+                  </div>
+                </Link>
+              </div>
             ) : (
               <button
                 onClick={() => { setActiveTab('login'); setAuthOpen(true) }}

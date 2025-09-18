@@ -7,6 +7,7 @@ import IndexLanding from './landing_page/IndexLanding'
 import ItemDetails from './pages/ItemDetails'
 import NotFound from './pages/NotFound'
 import Home from './pages/Home'
+import InterestedProperties from './pages/InterestedProperties'
 import { getAuthToken } from './utils/api'
 import Account from './pages/Account'
 
@@ -47,6 +48,7 @@ export default function App() {
         <Routes>
             <Route element={<RequireAuth><ItemDetails /></RequireAuth>} path='/properties/:id' />
             <Route element={<RequireAuth><Home /></RequireAuth>} path='/properties' />
+            <Route element={<RequireAuth><InterestedProperties /></RequireAuth>} path='/interested-properties' />
             <Route element={<RedirectIfAuth><IndexLanding /></RedirectIfAuth>} path='/' />
             <Route element={<RequireAuth><Account /></RequireAuth>} path='/account' />
             <Route element={<NotFound />} path='*' />

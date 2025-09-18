@@ -5,7 +5,7 @@ import PropertyIcon from './PropertyIcon'
 import { Button } from './ui/button'
 
 // Define the data type based on FastAPI backend model
-interface PropertyData {
+export interface PropertyData {
   _id: string
   "Account name": string
   "Auction Id": string

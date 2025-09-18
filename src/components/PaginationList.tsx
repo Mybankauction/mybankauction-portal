@@ -51,7 +51,7 @@ const PaginatedList = () => {
   }
 
   return (
-    <div className='max-w-[1000px] w-full min-h-[300px] h-[75vh] overflow-y-scroll px-2 md:px-5'>
+    <div className='max-w-[1000px] w-full min-h-[300px] h-[85vh] overflow-y-scroll px-2 md:px-5'>
       {!loading ? (
         <div className='mx-auto'>
           {/* grid-cols-1 sm:grid-cols-2 */}

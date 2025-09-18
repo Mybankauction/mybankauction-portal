@@ -47,7 +47,7 @@ export default function ItemDetails() {
       localStorage.getItem('interestedDeals') || '[]'
     )
     const dealExists = existingDeals.some(
-      (deal: any) => deal.auction_id === data?.auction_id
+      (deal: any) => deal.auction_id === data?.["Auction Id"]
     )
 
     setIsInterested(dealExists ? true : false)
@@ -57,8 +57,8 @@ export default function ItemDetails() {
     try {
       setIsLoading(true)
       const token = getAuthToken()
-      const res = await fetch(`http://127.0.0.1:8000/filtered.properties?auction_id=${id}` , {
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      const res = await fetch(`https://mybankauction-backend-289962944772.us-east1.run.app/filtered.properties?auction_id=${id}` , {
+        headers: token ? { Authorization: `${token}` } : undefined,
       })
       
       if (!res.ok) {
@@ -95,15 +95,13 @@ export default function ItemDetails() {
       return
     }
 
-    setIsInterested(true)
-    
     const interestedProperty = {
-      auction_id: data.auction_id,
-      property_type: data.property_type,
-      city: data.city,
-      area: data.area,
-      reserve_price: data.reserve_price,
-      bank_name: data.bank_name,
+      auction_id: data["Auction Id"],
+      property_type: data["Property Type"],
+      city: data["City"],
+      area: data["Area"],
+      reserve_price: data["Reserve Price"],
+      bank_name: data["Bank Name"],
       auction_start_date: data.auction_start_date,
       auction_end_date: data.auction_end_date,
       interested_at: new Date().toISOString()
@@ -113,17 +111,23 @@ export default function ItemDetails() {
       localStorage.getItem('interestedDeals') || '[]'
     )
 
-    // Check for duplicates based on auction_id
-    if (
-      !existingDeals.some(
-        (deal: any) => deal.auction_id === interestedProperty.auction_id
-      )
-    ) {
+    // Toggle interest: add if not exists, otherwise remove
+    const alreadyExists = existingDeals.some(
+      (deal: any) => deal.auction_id === interestedProperty.auction_id
+    )
+
+    if (!alreadyExists) {
       existingDeals.push(interestedProperty)
       localStorage.setItem('interestedDeals', JSON.stringify(existingDeals))
+      setIsInterested(true)
       toast.success('Added to your interested properties!')
     } else {
-      toast.success('Property already in your interested list!')
+      const updatedDeals = existingDeals.filter(
+        (deal: any) => deal.auction_id !== interestedProperty.auction_id
+      )
+      localStorage.setItem('interestedDeals', JSON.stringify(updatedDeals))
+      setIsInterested(false)
+      toast.success('Removed from your interested properties')
     }
   }
 
@@ -168,7 +172,6 @@ export default function ItemDetails() {
               </p>
               <button
                 onClick={handleInterestedButtonClick}
-                disabled={isInterested}
                 className={`${
                   isInterested ? 'bg-green-400' : 'bg-red-400'
                 } text-base text-white px-2 py-1 rounded font-normal text-nowrap`}
