@@ -1,4 +1,5 @@
 import Header from '@/components/Header'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { convertDateToReadableFormat, formatRupee } from '@/utils'
 import { ArrowLeft, CalendarDays, Heart, LandPlot, MapPin } from 'lucide-react'
@@ -6,7 +7,7 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { MagnifyingGlass } from 'react-loader-spinner'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { getAuthToken } from '@/utils/api'
+import { getAuthToken, fetchInterestedProperties, postInterestedProperty } from '@/utils/api'
 
 // Define the data type based on FastAPI backend model
 interface PropertyData {
@@ -41,16 +42,23 @@ export default function ItemDetails() {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const [isInterested, setIsInterested] = useState(false)
+  const [showPhoneDialog, setShowPhoneDialog] = useState(false)
+  const [phoneInput, setPhoneInput] = useState('')
+  const [submittingPhone, setSubmittingPhone] = useState(false)
 
   useEffect(() => {
-    const existingDeals = JSON.parse(
-      localStorage.getItem('interestedDeals') || '[]'
-    )
-    const dealExists = existingDeals.some(
-      (deal: any) => deal.auction_id === data?.["Auction Id"]
-    )
-
-    setIsInterested(dealExists ? true : false)
+    async function syncInterestedFromServer() {
+      try {
+        const list = await fetchInterestedProperties()
+        const exists = Array.isArray(list) && list.some((item: any) => item?.["Auction Id"] === data?.["Auction Id"]) 
+        setIsInterested(Boolean(exists))
+      } catch {
+        // ignore
+      }
+    }
+    if (data?.["Auction Id"]) {
+      syncInterestedFromServer()
+    }
   }, [data])
 
   async function fetchDetails() {
@@ -95,6 +103,38 @@ export default function ItemDetails() {
       return
     }
 
+    // First time: if user hasn't submitted phone yet, open dialog when server list is empty
+    const alreadyAsked = localStorage.getItem('phone_number_submitted') === 'true'
+    if (!alreadyAsked) {
+      try {
+        const serverInterested = await fetchInterestedProperties()
+        const hasAny = Array.isArray(serverInterested) && serverInterested.length > 0
+        if (!hasAny) {
+          setShowPhoneDialog(true)
+          return
+        }
+      } catch (e) {
+        // If fetching interested list fails (e.g., token/first-time), still prompt for phone
+        setShowPhoneDialog(true)
+        return
+      }
+    }
+
+    // Always post interest for this property to backend
+    try {
+      if (!data._id) {
+        toast.error('Property id not available')
+        return
+      }
+      await postInterestedProperty({ property_id: data._id })
+      toast.success('Added to your interested properties!')
+      setIsInterested(true)
+    } catch (e) {
+      console.error('Interest save error', e)
+      toast.error('Failed to add to interested properties')
+      return
+    }
+
     const interestedProperty = {
       auction_id: data["Auction Id"],
       property_type: data["Property Type"],
@@ -120,7 +160,6 @@ export default function ItemDetails() {
       existingDeals.push(interestedProperty)
       localStorage.setItem('interestedDeals', JSON.stringify(existingDeals))
       setIsInterested(true)
-      toast.success('Added to your interested properties!')
     } else {
       const updatedDeals = existingDeals.filter(
         (deal: any) => deal.auction_id !== interestedProperty.auction_id
@@ -139,6 +178,61 @@ export default function ItemDetails() {
     <>
     <Header/>
     <div className='max-w-[1300px] mt-5 mx-auto pb-20'>
+      <Dialog open={showPhoneDialog} onOpenChange={setShowPhoneDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enter your phone number</DialogTitle>
+          </DialogHeader>
+          <div className='flex flex-col gap-3 w-full'>
+            <input
+              type='tel'
+              className='border rounded px-3 py-2'
+              placeholder='e.g. 95979xxxxx'
+              value={phoneInput}
+              onChange={(e) => setPhoneInput(e.target.value)}
+            />
+            <div className='flex gap-2 justify-end'>
+              <button
+                className='px-4 py-2 rounded bg-neutral-200'
+                onClick={() => setShowPhoneDialog(false)}
+                disabled={submittingPhone}
+              >
+                Cancel
+              </button>
+              <button
+                className='px-4 py-2 rounded bg-red-400 text-white disabled:opacity-50'
+                onClick={async () => {
+                  const trimmed = phoneInput.trim()
+                  if (!/^\+?[0-9\s-]{10,13}$/.test(trimmed)) {
+                    toast.error('Please enter a valid phone number')
+                    return
+                  }
+                  if (!data?._id) {
+                    toast.error('Property id not available')
+                    return
+                  }
+                  try {
+                    setSubmittingPhone(true)
+                    await postInterestedProperty({ property_id: data._id, phone_number: trimmed })
+                    localStorage.setItem('phone_number_submitted', 'true')
+                    toast.success('Phone saved and interest registered')
+                    setShowPhoneDialog(false)
+                    setIsInterested(true)
+                  } catch (e) {
+                    console.error(e)
+                    toast.error('Failed to register interest')
+                  } finally {
+                    setSubmittingPhone(false)
+                  }
+                }}
+                disabled={submittingPhone}
+              >
+                {submittingPhone ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       {isLoading ? (
         <div className='mx-auto mt-10 h-screen'>
           <MagnifyingGlass

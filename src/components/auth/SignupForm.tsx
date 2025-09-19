@@ -109,7 +109,7 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 min-w-72">
       <div className="space-y-2">
         <Label htmlFor="full_name">Full Name</Label>
         <Input
@@ -160,7 +160,7 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
           <p className="text-sm text-red-500">{errors.password}</p>
         )}
         <p className="text-xs text-gray-500">
-          Password must contain: uppercase letter, lowercase letter, special character, and be longer than 6 characters
+          {/* Password must contain: uppercase letter, lowercase letter, special character, and be longer than 6 characters */}
         </p>
       </div>
       

@@ -50,8 +50,9 @@ const Hero: React.FC = () => {
         </div>
         </div>
       </div>
+      
       <Dialog open={authOpen} onOpenChange={setAuthOpen}>
-        <DialogContent className='max-w-lg w-full'>
+        <DialogContent className='max-w-sm b-red'>
           <DialogHeader>
             <DialogTitle className='text-lg font-bold'>
               {activeTab === 'login' ? 'Login' : 'Sign Up'}

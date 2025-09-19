@@ -112,7 +112,7 @@ export default function Header() {
                 </Link>
               </div>
             ) : (
-              <Drawer>
+              <Drawer direction='right'>
                 <DrawerTrigger aria-label='Open menu'>
                   <img
                     src={Image.BurgerMenu}
@@ -151,13 +151,7 @@ export default function Header() {
                       Login / Sign Up
                     </button>
                   </div>
-                  <DrawerFooter>
-                    <DrawerClose>
-                      <button className='text-xs text-white bg-primary px-4 py-2 rounded font-bold'>
-                        Close
-                      </button>
-                    </DrawerClose>
-                  </DrawerFooter>
+                  
                 </DrawerContent>
               </Drawer>
             )}
@@ -200,9 +194,10 @@ export default function Header() {
           </div>
         </div>
       </div>
+      {/* Login */}
       <Dialog open={authOpen} onOpenChange={setAuthOpen}>
-        <DialogContent className='max-w-lg w-full'>
-          <DialogHeader>
+        <DialogContent className='b-red max-w-sm'>
+          <DialogHeader >
             <DialogTitle className='text-lg font-bold'>
               {activeTab === 'login' ? 'Login' : 'Sign Up'}
             </DialogTitle>

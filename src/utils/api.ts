@@ -65,6 +65,32 @@ export function getAuthToken(): string | null {
   }
 }
 
+// Interested properties
+export async function fetchInterestedProperties(): Promise<any[]> {
+  const token = getAuthToken()
+  const res = await fetch(`${API_BASE_URL}/${API_ENDPOINT.INTERESTED_PROPERTIES}` , {
+    headers: token ? { Authorization: `${token}` } : undefined,
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error('Failed to fetch interested properties')
+  return data?.data ?? []
+}
+
+export async function postInterestedProperty(payload: { property_id: string, phone_number?: string }): Promise<{ success: boolean }> {
+  const token = getAuthToken()
+  const res = await fetch(`${API_BASE_URL}/${API_ENDPOINT.INTERESTED_PROPERTY}` , {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `${token}` } : {}),
+    },
+    body: JSON.stringify(payload),
+  })
+  const data = await res.json()
+  if (!res.ok && res.status !== 201) throw new Error(data?.message || 'Failed to save interested property')
+  return { success: true }
+}
+
 export async function registerUser(userData: RegisterRequest): Promise<AuthResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/${API_ENDPOINT.REGISTER}`, {

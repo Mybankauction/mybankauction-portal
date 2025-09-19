@@ -6,4 +6,6 @@ export const API_ENDPOINT = {
   FILTERED_PROPERTIES: 'filtered.properties',
   LOGIN: 'login',
   REGISTER: 'register',
+  INTERESTED_PROPERTIES: 'interested-properties',
+  INTERESTED_PROPERTY: 'interested-property',
 }

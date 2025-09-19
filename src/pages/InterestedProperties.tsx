@@ -45,7 +45,7 @@ export default function InterestedProperties() {
   return (
     <>
       <Header />
-      <div className='max-w-[1300px] mt-5 mx-auto pb-20 '>
+      <div className='max-w-[1300px] mt-5 mx-auto pb-20 sm:mx-5'>
         <div>
           <Link to={'/properties'}>
             <Button variant={'link'} className='text-red-400'>
