@@ -200,7 +200,7 @@ export default function Filters({ setIsOpen }: any) {
   // )
 
   return (
-    <section className=' flex-wrap gap- py-3 px-6 shadow border-gray-300 rounded  bg-white min-w-[320px] max-w-[380px] '>
+    <section className='mx-auto flex-wrap gap- py-3 px-6 shadow border-gray-300 rounded bg-white min-w-[320px] max-w-[380px] '>
       <form
         onSubmit={handleSubmit}
         // w-[340px]
