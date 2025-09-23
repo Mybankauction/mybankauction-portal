@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import toast from 'react-hot-toast'
-import { loginUser } from '@/utils/api'
+import { fetchInterestedProperties, loginUser } from '@/utils/api'
 import { validateEmail } from '@/utils/validation'
 import { useNavigate } from 'react-router-dom'
 
@@ -52,17 +52,21 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
         email: formData.email,
         password: formData.password
       })
+
+      console.log(response);
       
       if (response.success) {
         // Store login state in localStorage
         localStorage.setItem('isLoggedin', 'true')
         localStorage.setItem('user', JSON.stringify({
           id: response.user?.id || 'user123',
-          Name1: response.user?.full_name || 'User Name',
+          Name1: response.data?.full_name || 'User Name',
+          phone_number: response.data?.phone_number || "N/A",
           email: response.user?.email || formData.email,
           token: response.token
         }))
-        
+        const auctionIds = await fetchInterestedProperties()
+        localStorage.setItem("interestedAuctionIds", JSON.stringify(auctionIds))
         toast.success('Login successful!')
         onSuccess()
         navigate('/properties', { replace: true })

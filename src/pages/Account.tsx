@@ -7,15 +7,19 @@ export default function Account() {
   const [UserData, setUserData] = useState<any>(null)
   const navigate = useNavigate()
 
+  console.log(UserData);
+  
   const handleLogout = () => {
-    localStorage.removeItem('user')
-    localStorage.removeItem('isLoggedin')
-    localStorage.removeItem('apiStore')
-    triggerAuthUpdate()
-    setUserData(null)
-    navigate('/')
-    window.location.reload()
-  }
+    triggerAuthUpdate();
+    navigate('/'); 
+    setUserData(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('isLoggedin');
+    localStorage.removeItem('apiStore');
+    localStorage.removeItem("interestedAuctionIds")
+    window.location.reload();
+  };
+  
 
   useEffect(() => {
     try {
@@ -40,6 +44,12 @@ export default function Account() {
         <p>Name</p>
         <p className='text-2xl'>{UserData?.Name1 || 'NA'}</p>
       </div>
+
+      <div className='mb-10'>
+        <p>Phone Number</p>
+        <p className='text-2xl'>{UserData?.phone_number || 'NA'}</p>
+      </div>
+
       <div>
         <p>Email</p>
         <p className='text-2xl'>{UserData?.email || 'NA'}</p>

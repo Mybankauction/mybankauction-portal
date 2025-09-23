@@ -26,6 +26,7 @@ type ApiStoreState = {
   clientPaginate: boolean
   setFilters: (filters: Filters) => void
   fetchData: (currentPage: any) => Promise<void>
+  clearData: () => void // Add this method
 }
 
 const persistConfig = {
@@ -41,11 +42,13 @@ export const useApiStore = create<ApiStoreState>()(
       data: null,
       loading: false,
       error: null,
-      totalItems: 0,
+      totalItems: 0,  
       totalPages: 0,
       clientPaginate: false,
 
       setFilters: (filters: Filters) => set({ filters }),
+
+      clearData: () => set({ data: null }), // Add this method
 
       fetchData: async (currentPage: number) => {
         set({ loading: true, error: null })

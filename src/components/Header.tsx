@@ -196,7 +196,7 @@ export default function Header() {
       </div>
       {/* Login */}
       <Dialog open={authOpen} onOpenChange={setAuthOpen}>
-        <DialogContent className='b-red max-w-sm'>
+        <DialogContent className='max-w-sm max-h-[90vh] overflow-y-auto'>
           <DialogHeader >
             <DialogTitle className='text-lg font-bold'>
               {activeTab === 'login' ? 'Login' : 'Sign Up'}

@@ -43,22 +43,24 @@ export default function Home() {
 
         {/* Filters in Dialog for Mobile/Tablet */}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger className='lg:hidden' asChild>
+          <DialogTrigger className="lg:hidden" asChild>
             <Button
-              type='button'
-              className='fixed bottom-6 right-6 z-50 rounded-full h-14 w-14 p-0 shadow-lg lg:hidden'
-              variant={'default'}
+              type="button"
+              className="fixed bottom-6 right-6 bg-primary z-50 rounded-full h-14 w-14 p-0 shadow-lg lg:hidden"
+              variant="default"
             >
-              <FilterIcon className='h-6 w-6' />
+              <FilterIcon className="h-6 w-6" />
             </Button>
           </DialogTrigger>
-          <DialogContent className='w-full h-[90vh] max-w-none lg:max-w-fit flex flex-col overflow-y-auto lg:h-auto'>
+          {/*  */}
+          <DialogContent className="max-w-sm max-h-[90vh] overflow-y-auto" >
             <DialogHeader>
               <DialogTitle>Filters</DialogTitle>
             </DialogHeader>
             <Filters setIsOpen={setIsOpen} />
           </DialogContent>
         </Dialog>
+
         <PaginatedList />
       </div>
     </>

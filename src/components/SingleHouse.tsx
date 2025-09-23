@@ -47,12 +47,14 @@ function PropertyImage(type: string) {
   }
 }
 
-export default function SingleHouse({ data }: { data: PropertyData }) {
+export default function SingleHouse({ data }: { data: PropertyData } ) {
   
   return (
     <Link
       key={data["Auction Id"]}
       to={`/properties/${data["Auction Id"]}`}
+      target='_blank'
+      rel='noopener noreferrer'
       className='text-sm'
     >
       {/* min-w-[310px] */}

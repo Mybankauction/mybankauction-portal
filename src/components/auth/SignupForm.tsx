@@ -14,6 +14,7 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
+    phone_number:'',
     password: '',
     confirmPassword: ''
   })
@@ -31,6 +32,16 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
       newErrors.email = 'Email is required'
     } else if (!validateEmail(formData.email)) {
       newErrors.email = 'Please enter a valid email address'
+    }
+
+    // Phone number validation: 10 digits, starts with 6-9 (India)
+    const digitsOnly = (formData.phone_number || '').replace(/\D/g, '')
+    if (!digitsOnly) {
+      newErrors.phone_number = 'Phone number is required'
+    } else if (digitsOnly.length !== 10) {
+      newErrors.phone_number = 'Enter a 10-digit phone number'
+    } else if (!/^[6-9]\d{9}$/.test(digitsOnly)) {
+      newErrors.phone_number = 'Enter a valid mobile number'
     }
     
     if (!formData.password) {
@@ -66,6 +77,7 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
       const response = await registerUser({
         full_name: formData.full_name,
         email: formData.email,
+        phone_number: formData.phone_number,
         password: formData.password
       })
       
@@ -94,9 +106,14 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+    let nextValue = value
+    // Sanitize and clamp phone number input to 10 digits
+    if (name === 'phone_number') {
+      nextValue = value.replace(/\D/g, '').slice(0, 10)
+    }
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: nextValue
     }))
     
     // Clear error when user starts typing
@@ -141,6 +158,26 @@ export default function SignupForm({ onSuccess }: SignupFormProps) {
         />
         {errors.email && (
           <p className="text-sm text-red-500">{errors.email}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="phone_number">Phone Number</Label>
+        <Input
+          id="phone_number"
+          name="phone_number"
+          type="tel"
+          inputMode="numeric"
+          pattern="[0-9]{10}"
+          maxLength={10}
+          placeholder="Enter your Phone Number"
+          value={formData.phone_number}
+          onChange={handleChange}
+          className={errors.phone_number ? 'border-red-500' : ''}
+          required
+        />
+        {errors.phone_number && (
+          <p className="text-sm text-red-500">{errors.phone_number}</p>
         )}
       </div>
       

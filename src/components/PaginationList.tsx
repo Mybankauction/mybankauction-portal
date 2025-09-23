@@ -10,7 +10,7 @@ import { Button } from './ui/button'
 const PaginatedList = () => {
   const [currentPage, setCurrentPage] = useState(1)
 
-  const { data, fetchData, loading, itemsPerPage, filters, totalItems, totalPages } = useApiStore()
+  const { data, fetchData, loading, itemsPerPage, filters, totalItems, totalPages, clearData } = useApiStore()
   console.log(data);
   
   useEffect(() => {
@@ -20,6 +20,7 @@ const PaginatedList = () => {
   // Refetch when filters change and reset to first page
   useEffect(() => {
     setCurrentPage(1)
+    clearData() // Clear data immediately when filters change
     fetchData(1)
   }, [filters])
 
@@ -27,6 +28,7 @@ const PaginatedList = () => {
   useEffect(() => {
     if (totalPages > 0 && currentPage > totalPages) {
       setCurrentPage(totalPages)
+      clearData() // Clear data before fetching new page
       fetchData(totalPages)
     }
   }, [totalPages])
@@ -48,6 +50,13 @@ const PaginatedList = () => {
       filters.city ||
       (filters.propertyType && filters.propertyType.length > 0)
     )
+  }
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage !== currentPage) {
+      clearData() // Clear data immediately when page changes
+      setCurrentPage(newPage)
+    }
   }
 
   return (
@@ -88,8 +97,7 @@ const PaginatedList = () => {
             size="sm"
             onClick={() => {
               if (currentPage > 1) {
-                setCurrentPage(currentPage - 1)
-                fetchData(currentPage - 1)
+                handlePageChange(currentPage - 1)
               }
             }}
             disabled={currentPage === 1}
@@ -117,10 +125,7 @@ const PaginatedList = () => {
                   key={pageNum}
                   variant={currentPage === pageNum ? "default" : "outline"}
                   size="sm"
-                  onClick={() => {
-                    setCurrentPage(pageNum)
-                    fetchData(pageNum)
-                  }}
+                  onClick={() => handlePageChange(pageNum)}
                   className={`px-3 py-1 ${
                     currentPage === pageNum 
                       ? 'bg-red-500 hover:bg-red-600 text-white' 
@@ -139,8 +144,7 @@ const PaginatedList = () => {
             size="sm"
             onClick={() => {
               if (currentPage < totalPages) {
-                setCurrentPage(currentPage + 1)
-                fetchData(currentPage + 1)
+                handlePageChange(currentPage + 1)
               }
             }}
             disabled={currentPage === totalPages}

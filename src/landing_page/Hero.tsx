@@ -27,7 +27,7 @@ const Hero: React.FC = () => {
 
   return (
     <div
-      className="relative bg-cover bg-center b-red h-[60vh]"
+      className="relative bg-cover bg-center h-[60vh]"
       style={{ 
         backgroundImage: `url(${heroImages[currentIndex]})`,
       }}
@@ -52,7 +52,7 @@ const Hero: React.FC = () => {
       </div>
       
       <Dialog open={authOpen} onOpenChange={setAuthOpen}>
-        <DialogContent className='max-w-sm b-red'>
+        <DialogContent className='max-w-sm max-h-[90vh] overflow-y-auto'>
           <DialogHeader>
             <DialogTitle className='text-lg font-bold'>
               {activeTab === 'login' ? 'Login' : 'Sign Up'}
