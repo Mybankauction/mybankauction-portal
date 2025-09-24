@@ -203,8 +203,7 @@ export default function Filters({ setIsOpen }: any) {
     <section className='mx-auto flex-wrap gap- py-3 px-6 shadow border-gray-300 rounded bg-white '>
       <form
         onSubmit={handleSubmit}
-        // w-[340px]
-        className='flex flex-col gap-2 '
+        className='flex flex-col gap-2'
         onKeyDown={handleKeyDown}
       >
         {/* Auction ID */}

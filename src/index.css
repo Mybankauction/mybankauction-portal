@@ -64,3 +64,34 @@ input[type='number'] {
     scrollbar-width: none; /* Firefox */
   }
 }
+
+/* Custom Swiper styles to hide navigation on small screens */
+.swiper-button-prev,
+.swiper-button-next {
+  display: none;
+}
+
+/* Show navigation buttons on screens 768px and wider (tablets and desktops) */
+@media (min-width: 768px) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    display: flex;
+  }
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #E3450A !important;  /* arrow color */
+}
+
+/* Inactive bullets */
+.swiper-pagination-bullet {
+  background: #ffffff !important;   /* white */
+  opacity: 0.6;
+}
+
+/* Active bullet */
+.swiper-pagination-bullet-active {
+  background: #E3450A !important;   /* orange */
+  opacity: 1;
+}

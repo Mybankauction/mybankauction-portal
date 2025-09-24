@@ -12,7 +12,7 @@ const About: React.FC = () => {
             MyBankAuction.com was built with a simple vision: to make quality assets affordable and accessible for everyone. As part of Simple Stone Assets & Services Pvt. Ltd., we specialize in connecting buyers with bank-auction and distressed assets across India. Every property listed is legally verified, transparent, and risk-free, ensuring smooth transactions and long-term value. Our mission is to bring trust, clarity, and opportunity into the distressed property market — helping homebuyers, investors, and businesses secure high-value assets at unmatched prices.
             </p>
           </div>
-          <div className="w-full">
+          <div className="w-full flex items-center">
             <img src={AuctionImg} alt="About MyBankAuction" className="w-full h-auto rounded-lg object-cover" />
           </div>
         </div>

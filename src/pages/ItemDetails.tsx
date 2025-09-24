@@ -253,9 +253,12 @@ export default function ItemDetails() {
               <h1 className='font-bold text-xl pb-4 underline'>
                 Property Description:{' '}
               </h1>
-              <p>
-                {data?.["Description"]
-                  ? data.description
+              <p className='leading-7 mb-2'>
+                <span className='font-bold'>
+                  Description : 
+                </span>
+                {data?.Description
+                  ? data.Description
                   : 'No description available for this property.'}
               </p>
               <div className='flex items-center justify-between *:py-2'>
