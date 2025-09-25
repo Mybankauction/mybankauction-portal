@@ -8,4 +8,5 @@ export const API_ENDPOINT = {
   REGISTER: 'register',
   INTERESTED_PROPERTIES: 'interested-properties',
   INTERESTED_PROPERTY: 'interested-property',
+  DELETE_INTERESTED_PROPERTY: 'interested-property',
 }

@@ -78,17 +78,17 @@ export default function ItemDetails() {
   const handleInterestedButtonClick = async () => {
     if (!data) return toast.error('Property data not available')
 
-    const auctionId = data["Auction Id"]
+    const auctionId = data._id
     if (!auctionId) return toast.error('Auction ID not available')
 
     const existing: string[] = JSON.parse(localStorage.getItem('interestedAuctionIds') || '[]')
 
     if (existing.includes(auctionId)) {
       // Remove (toggle off)
-      const updated = existing.filter((id: string) => id !== auctionId)
-      localStorage.setItem('interestedAuctionIds', JSON.stringify(updated))
-      setIsInterested(false)
-      toast.success('Removed from interested list')
+      // const updated = existing.filter((id: string) => id !== auctionId)
+      // localStorage.setItem('interestedAuctionIds', JSON.stringify(updated))
+      // setIsInterested(false)
+      // toast.success('Removed from interested list')
     } else {
       // Add (toggle on)
       existing.push(auctionId)
@@ -111,7 +111,7 @@ export default function ItemDetails() {
   useEffect(() => {
     if (data?.["Auction Id"]) {
       const existing: string[] = JSON.parse(localStorage.getItem('interestedAuctionIds') || '[]')
-      setIsInterested(existing.includes(data["Auction Id"]))
+      setIsInterested(existing.includes(data._id))
     }
   }, [data])
 

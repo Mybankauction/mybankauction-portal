@@ -1,11 +1,12 @@
 import Header from '@/components/Header'
 import SingleHouse, { PropertyData } from '@/components/SingleHouse'
 import { Button } from '@/components/ui/button'
-import { API_BASE_URL } from '@/conf'
+import { API_BASE_URL, API_ENDPOINT } from '@/conf'
 import { formatRupee } from '@/utils'
 import { getAuthToken } from '@/utils/api'
 import { ArrowLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { data, Link, useNavigate } from 'react-router-dom'
 
 type InterestedProperty = PropertyData
@@ -32,6 +33,59 @@ export default function InterestedProperties() {
       setLoading(false)
     }
   }
+
+  const handleDeleteProperty = async (auctionId: string) => {
+    console.log("Deleting property with Auction ID:", auctionId);
+
+    try {
+        const authToken = getAuthToken();
+        if (!authToken) {
+            toast.error('Authentication token not found.');
+            return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}/${API_ENDPOINT.DELETE_INTERESTED_PROPERTY}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': authToken,
+
+            },
+            body: JSON.stringify({ property_id: auctionId }), 
+        });
+
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => {
+                return { message: `Request failed with status: ${response.status}` };
+            });
+            throw new Error(errorData.message || 'An unknown error occurred.');
+        }
+
+        toast.success('Property successfully deleted!');
+        setItems(prevItems => prevItems.filter(p => p._id !== auctionId));
+        
+        // Get the array from localStorage
+        const storedData = localStorage.getItem('interestedAuctionIds');
+
+        if (storedData) {
+            let idArray = JSON.parse(storedData);
+
+            // Remove the ID
+            idArray = idArray.filter((id:string) => id !== auctionId);
+
+            // Save the updated array back
+            localStorage.setItem('interestedAuctionIds', JSON.stringify(idArray));
+        }
+
+        
+
+    } catch (error) {
+        console.error('Failed to delete property:', error);
+        toast.error('Failed to delete property.');
+    }
+  }
+
 
   useEffect(() => {
     const token = getAuthToken()
@@ -63,7 +117,10 @@ export default function InterestedProperties() {
         ) : (
           <div className='mx-2 sm:mx-2 md:mx-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
             {items.map((item) => (
-              <SingleHouse key={item["Auction Id"]} data={item} />
+              <SingleHouse 
+                key={item["Auction Id"]} 
+                data={item}
+                onDelete={handleDeleteProperty} />
             ))}
           </div>
         )}
@@ -71,5 +128,3 @@ export default function InterestedProperties() {
     </>
   )
 }
-
-

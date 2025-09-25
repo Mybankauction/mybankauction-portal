@@ -86,9 +86,10 @@ export async function fetchInterestedProperties(): Promise<string[]> {
   
 
   // Convert full property objects to auction_id array
-  const auctionIds: string[] = (data?.data ?? []).map((item: any) => item["Auction Id"])
+  const auctionIds: string[] = (data?.data ?? []).map((item: any) => item._id)
 
-
+  console.log(auctionIds);
+  
 
   return auctionIds
 }
