@@ -94,7 +94,7 @@ export default function Header() {
         <div className='flex items-center justify-between w-full min-[1250px]:w-auto'>
           <Link to={logoHref}>
             <div className='cursor-pointer flex items-center gap-3'>
-              <img src={Image.Logo} alt='Logo' className='h-17 w-auto object-contain rounded-sm' />
+              <img src={Image.Logo} alt='Logo' className='h-20 w-auto object-contain rounded-sm' />
             </div>
           </Link>
           <div className='hidden max-[1250px]:block p-2'>
