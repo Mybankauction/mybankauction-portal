@@ -99,7 +99,7 @@ export default function InterestedProperties() {
   return (
     <>
       <Header />
-      <div className='container w-full mt-5 pb-20'>
+      <div className='container max-w-7xl mt-5 pb-20'>
         <div className='mx-2 sm:mx-2 md:mx-3'>
           <Link to={'/properties'}>
             <Button variant={'link'} className='text-red-400'>
@@ -115,7 +115,7 @@ export default function InterestedProperties() {
         ) : items.length === 0 ? (
           <p className='text-center'>No interested properties yet.</p>
         ) : (
-          <div className='mx-2 sm:mx-2 md:mx-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
+          <div className='mx-2 flex flex-col gap-5 mb-8 relative'>
             {items.map((item) => (
               <SingleHouse 
                 key={item["Auction Id"]} 

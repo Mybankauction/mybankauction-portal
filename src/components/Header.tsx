@@ -68,7 +68,7 @@ function NavLinks() {
           >
             <li
               className={`px-0 md:px-0 cursor-pointer font-outfit text-center font-semibold text-2xl transition-colors py-2 md:py-0 w-full md:w-auto ${
-                isActive ? 'text-[#E34732]' : 'text-neutral-800 hover:text-[#E34732]'
+                isActive ? 'text-[#E34732]' : 'text-white hover:text-[#E34732]'
               }`}
             >
               {item.name}
@@ -89,7 +89,7 @@ export default function Header() {
   const [activeTab, setActiveTab] = React.useState<'login' | 'signup'>('login')
 
   return (
-    <header className='sticky top-0 z-50 bg-slate-200 text-white py-2 shadow-md transition-all'>
+    <header className='sticky top-0 z-50 bg-neutral-900 text-white py-2 shadow-md transition-all'>
       <div className='container mx-auto px-4 flex flex-col min-[1250px]:flex-row justify-between items-center'>
         <div className='flex items-center justify-between w-full min-[1250px]:w-auto'>
           <Link to={logoHref}>
@@ -181,7 +181,7 @@ export default function Header() {
               <button
                 onClick={() => { setActiveTab('login'); setAuthOpen(true) }}
               >
-                <div className='inline-flex items-center justify-center gap-2 border h-10 px-4 py-2 w-full tablet:w-auto bg-[#E34732] text-white hover:bg-auction-gold hover:text-auction-navy border-white cursor-pointer'>
+                <div className='inline-flex items-center justify-center gap-2 h-10 px-4 py-2 w-full tablet:w-auto bg-[#E34732] text-white hover:bg-primary/80 hover:bg-auction-gold hover:text-auction-navy rounded-sm cursor-pointer'>
                   <span className='text-sm font-bold font-outfit'>
                     LOGIN
                   </span>

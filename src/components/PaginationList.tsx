@@ -60,11 +60,11 @@ const PaginatedList = () => {
   }
 
   return (
-    <div className='max-w-[1000px] w-full min-h-[300px] h-[85vh] overflow-y-scroll px-2 md:px-5'>
+    <div className='max-w-full w-full min-h-[300px]'>
       {!loading ? (
         <div className='mx-auto'>
           {/* grid-cols-1 sm:grid-cols-2 */}
-          <div className='grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-2 xl:grid-cols-3 gap-5 mb-8 relative'>
+          <div className='flex flex-col gap-5 mb-8 relative'>
             {Array.isArray(paginatedData) && paginatedData.length > 0 ? (
               paginatedData.map((item: any) => (
                 <SingleHouse key={item["Auction Id"]} data={item} />

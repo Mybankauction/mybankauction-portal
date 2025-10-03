@@ -7,8 +7,8 @@ type Filters = {
   auctionStartDate?: string | null
   auctionEndDate?: string | null
   area?: string[]
-  minPrice?: number
-  maxPrice?: number
+  minPrice?: string
+  maxPrice?: string
   propertyType?: string[]
   auctionId?: string
   state?: string
