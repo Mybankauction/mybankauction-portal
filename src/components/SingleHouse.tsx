@@ -44,8 +44,9 @@ function PropertyImage(type: string) {
       return ImageUtils.Plot;
     case 'House':
       return ImageUtils.House;
+    case 'Villa':
+      return ImageUtils.House;
     default:
-      // A default fallback image
       return 'https://placehold.co/250x200/F5F5F5/333333?text=Property';
   }
 }
@@ -101,7 +102,7 @@ export default function SingleHouse({ data, onDelete }: SingleHouseProps) {
             <div className="flex justify-between items-start mb-2">
               <div>
                 <p className="text-sm text-gray-500 flex items-center">
-                  <MapPin className="h-4 w-4 mr-1" />
+                  <MapPin className="h-4 w-4 mr-1 text-red-400" />
                   {data.City}, {data.State}
                 </p>
                 <p className="text-lg font-semibold text-gray-800">
@@ -119,10 +120,7 @@ export default function SingleHouse({ data, onDelete }: SingleHouseProps) {
                 <p className="text-xs text-gray-400">Area</p>
                 <p className="text-sm font-medium text-gray-700">{data.Area || 'N/A'}</p>
               </div>
-              <div>
-                <p className="text-xs text-gray-400">Deadline Date</p>
-                <p className="text-sm font-medium text-gray-700">{readableDate(data.auction_end_date)}</p>
-              </div>
+              
               <div>
                 <p className="text-xs text-gray-400">Auction Date</p>
                 <p className="text-sm font-medium text-gray-700">{readableDate(data.auction_start_date)}</p>
@@ -130,7 +128,7 @@ export default function SingleHouse({ data, onDelete }: SingleHouseProps) {
             </div>
 
             {/* Description */}
-            <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">
+            <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 blur-[2px]">
               {data.Description || 'No description available.'}
             </p>
           </div>
