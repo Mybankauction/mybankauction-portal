@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { dateOnly } from '@/utils'
 import { getAuthToken } from '@/utils/api'
+import { useEffect } from 'react'
 
 type Filters = {
   auctionStartDate?: string | null
@@ -23,6 +24,7 @@ type ApiStoreState = {
   error: string | null
   totalItems: number
   totalPages: number
+  currentPage: number
   clientPaginate: boolean
   setFilters: (filters: Filters) => void
   fetchData: (currentPage: any) => Promise<void>
@@ -34,6 +36,7 @@ const persistConfig = {
   getStorage: () => localStorage,
 }
 
+
 export const useApiStore = create<ApiStoreState>()(
   persist(
     (set, get) => ({
@@ -44,14 +47,26 @@ export const useApiStore = create<ApiStoreState>()(
       error: null,
       totalItems: 0,
       totalPages: 0,
+      currentPage: 1,
       clientPaginate: false,
 
-      setFilters: (filters: Filters) => set({ filters }),
+      // setFilters: (filters: Filters) => set({ filters }),
+      setFilters: (filters: Filters) => {
+        const prevFilters = get().filters
+        const filtersChanged = JSON.stringify(prevFilters) !== JSON.stringify(filters)
+
+        set({ filters })
+
+        if (filtersChanged) {
+          set({ currentPage: 1 })
+          get().fetchData(1)
+        }
+      },
 
       clearData: () => set({ data: null }), // Add this method
 
       fetchData: async (currentPage: number) => {
-        set({ loading: true, error: null })
+        set({ loading: true, error: null, currentPage })
 
         try {
           const { filters } = get()
@@ -109,10 +124,13 @@ export const useApiStore = create<ApiStoreState>()(
           const endpoint = hasAnyFilters ? 'filtered.properties' : 'properties'
           const url = `https://mybankauction-backend-289962944772.us-east1.run.app/${endpoint}?${queryParams.toString()}`
 
-          const response = await fetch(url)
+          const token = getAuthToken()
+          const response = await fetch(url, {
+            headers: token ? { Authorization: `${token}` } : undefined,
+          })
 
           console.log(response);
-          
+
 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)

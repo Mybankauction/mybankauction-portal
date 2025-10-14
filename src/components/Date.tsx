@@ -15,11 +15,10 @@ export default function DateComponent({
   label,
 }: any) {
   const [open, setOpen] = useState(false)
-  if (date) {
-    // console.log(JSON.stringify(date, null, 2))
-  }
-  let formattedDate = date && format(new Date(date), 'P')
-  console.log("formattedDate",formattedDate)
+  
+  // The format function will handle null/undefined dates gracefully
+  const formattedDate = date ? format(new Date(date), 'P') : null
+
   return (
     <>
       <Label htmlFor={label} className=''>
@@ -36,20 +35,25 @@ export default function DateComponent({
             id={label}
           >
             <CalendarIcon className='mr-2 h-4 w-4' />
-            {date ? formattedDate : <span>{placeholder}</span>}
+            {formattedDate ? formattedDate : <span>{placeholder}</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0 pb-4 pr-2'>
           <Calendar
             mode='single'
             selected={date}
-            onSelect={setDate}
+            onSelect={(selectedDate) => {
+              setDate(selectedDate)
+              setOpen(false) // ✅ Close popover on date selection for better UX
+            }}
+            // ✅ This is the line that disables all dates before today
+            disabled={{ before: new Date() }}
           />
-          <div className='flex'>
+          <div className='flex pt-2'>
             <button
               className='mr-2-auto ml-4 block items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm  transition-colors  h-9 w-16 p-0 font-normal aria-selected:opacity-100 bg-red-500 text-neutral-50'
               onClick={() => {
-                setDate('')
+                setDate(null) // Use null for consistency
                 setOpen(false)
               }}
             >
@@ -69,9 +73,7 @@ export default function DateComponent({
           type='hidden'
           name={name}
           id={label}
-          // value={date ?? (date ? date.toISOString() : '')}
-          // defaultValue={date?.toISOString()}
-          // value={date ? date.toISOString() : ''}
+          value={date ? new Date(date).toISOString() : ''}
         />
       </Popover>
     </>
