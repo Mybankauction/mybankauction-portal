@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import LoginForm from './auth/LoginForm';
 import SignupForm from './auth/SignupForm';
 import { Button } from './ui/button';
-import { readableDate } from '@/utils';
+import { formatRupee, readableDate } from '@/utils';
 import { Image as ImageUtils } from '@/utils/images';
 import { postInterestedProperty, deleteInterestedProperty } from '@/utils/api';
 import toast from 'react-hot-toast';
@@ -210,7 +210,7 @@ export default function SingleHouse({ data, onDelete }: SingleHouseProps) {
                   <Heart className={`h-6 w-6 transition-colors ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
                 </Button>
               </div>
-              <div className="grid grid-cols-2 gap-5 border-t border-b border-gray-100 py-3 my-3">
+              <div className="grid grid-cols-3 gap-5 border-t border-b border-gray-100 py-3 my-3">
                 <div>
                   <p className="text-xs text-gray-400">Area</p>
                   <p className="text-sm font-medium text-gray-700">{data.Area || 'N/A'}</p>
@@ -218,6 +218,10 @@ export default function SingleHouse({ data, onDelete }: SingleHouseProps) {
                 <div>
                   <p className="text-xs text-gray-400">Auction Date</p>
                   <p className="text-sm font-medium text-gray-700">{readableDate(data.auction_start_date)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Reserved Price</p>
+                  <p className="text-sm font-medium text-gray-700">₹{formatRupee(data["Reserve Price"].toString())}</p>
                 </div>
               </div>
               <p className={`text-xs text-gray-500 leading-relaxed line-clamp-2 blur-[2px] ${isLoggedIn ? 'blur-none' : ''}`}>
