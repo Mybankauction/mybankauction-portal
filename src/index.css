@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Prevent sticky header from covering anchored sections */
+.section-anchor {
+  scroll-margin-top: 90px; /* matches header height incl. padding */
+}
+
+.b-red {
+  outline: 1px solid red;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* width */
+/* ::-webkit-scrollbar {
+  width: 7px;
+} */
+
+/* Track */
+/* ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(255, 254, 254);
+  border-radius: 10px;
+} */
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(190, 190, 190);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(175, 175, 175);
+}
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+/* Custom Swiper styles to hide navigation on small screens */
+.swiper-button-prev,
+.swiper-button-next {
+  display: none;
+}
+
+/* Show navigation buttons on screens 768px and wider (tablets and desktops) */
+@media (min-width: 768px) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    display: flex;
+  }
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #E3450A !important;  /* arrow color */
+}
+
+/* Inactive bullets */
+.swiper-pagination-bullet {
+  background: #ffffff !important;   /* white */
+  opacity: 0.6;
+}
+
+/* Active bullet */
+.swiper-pagination-bullet-active {
+  background: #E3450A !important;   /* orange */
+  opacity: 1;
+}
