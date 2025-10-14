@@ -37,12 +37,16 @@ export default function Filters({ setIsOpen }: any) {
     const [auctionEndDate, setAuctionEndDate] = useState<string | null>('')
     const [minPrice, setMinPrice] = useState<string>('')
     const [maxPrice, setMaxPrice] = useState<string>('')
+    const [validation, setValidation] = useState(true)
     const [selectedAreaOptions, setSelectedAreaOptions] = useState<AreaOption[]>([])
     const [filteredAreaOptions, setFilteredAreaOptions] = useState<AreaOption[]>([])
 
     // Debounced filter update
     useEffect(() => {
         const debounceTimer = setTimeout(() => {
+            const minPriceRaw = minPrice ? minPrice.replace(/,/g, '') : ''
+            const maxPriceRaw = maxPrice ? maxPrice.replace(/,/g, '') : ''
+
             setFilters({
                 auctionId,
                 state: selectedState?.value,
@@ -50,10 +54,19 @@ export default function Filters({ setIsOpen }: any) {
                 propertyType: selectedPropertyTypeOptions.map((option) => option.value),
                 auctionStartDate: formattedDate(auctionStartDate!),
                 auctionEndDate: formattedEndOfDay(auctionEndDate!),
-                minPrice: minPrice ? minPrice.replace(/,/g, '') : '',
-                maxPrice: maxPrice ? maxPrice.replace(/,/g, '') : '',
+                minPrice: minPriceRaw,
+                maxPrice: maxPriceRaw,
                 area: selectedAreaOptions.map((option) => option.value),
             });
+
+            if (minPriceRaw && maxPriceRaw) {
+                const numericMin = parseFloat(minPriceRaw);
+                const numericMax = parseFloat(maxPriceRaw);
+                setValidation(numericMin <= numericMax);
+            } else {
+                setValidation(true);
+            }
+
         }, 500);
 
         return () => clearTimeout(debounceTimer);
@@ -171,7 +184,7 @@ export default function Filters({ setIsOpen }: any) {
     return (
         <section className='lg:p-4 lg:bg-white lg:rounded-lg lg:shadow-sm'>
             <div className='flex flex-col lg:flex-row lg:flex-wrap lg:items-end gap-3'>
-                <div className="flex-grow min-w-[150px]">
+                <div className="flex-grow min-w-[250px]">
                     <Input
                         type='number'
                         placeholder='Search ID'
@@ -179,7 +192,7 @@ export default function Filters({ setIsOpen }: any) {
                         onChange={(e) => setAuctionId(e.target.value)}
                     />
                 </div>
-                <div className="flex-grow min-w-[150px]">
+                <div className="flex-grow min-w-[250px]">
                     <MultiSelect
                         options={STATES}
                         placeholder='Select State'
@@ -188,7 +201,7 @@ export default function Filters({ setIsOpen }: any) {
                         singleSelect={true}
                     />
                 </div>
-                <div className="flex-grow min-w-[150px]">
+                <div className="flex-grow min-w-[250px]">
                     <MultiSelect
                         options={filteredCityOptions}
                         placeholder={selectedState ? 'Search City' : 'Select State first'}
@@ -199,7 +212,7 @@ export default function Filters({ setIsOpen }: any) {
                         disabled={!selectedState}
                     />
                 </div>
-                <div className="flex-grow min-w-[150px]">
+                <div className="flex-grow min-w-[250px]">
                     <MultiSelect
                         options={PROPERTY_TYPES}
                         placeholder='Property Type'
@@ -207,21 +220,21 @@ export default function Filters({ setIsOpen }: any) {
                         value={selectedPropertyTypeOptions}
                     />
                 </div>
-                <div className="flex-grow min-w-[150px]">
+                <div className="flex-grow min-w-[250px]">
                     <DateComponent
                         placeholder='Start Date'
                         date={auctionStartDate}
                         setDate={setAuctionStartDate}
                     />
                 </div>
-                <div className="flex-grow min-w-[150px]">
+                <div className="flex-grow min-w-[250px]">
                     <DateComponent
                         placeholder='End Date'
                         date={auctionEndDate}
                         setDate={setAuctionEndDate}
                     />
                 </div>
-                <div className="flex-grow min-w-[150px]">
+                <div className="flex-grow min-w-[250px]">
                     <Input
                         type='text'
                         placeholder='Min price'
@@ -229,7 +242,7 @@ export default function Filters({ setIsOpen }: any) {
                         onChange={(e) => handlePriceChange(e, setMinPrice)}
                     />
                 </div>
-                <div className="flex-grow min-w-[150px]">
+                <div className="flex-grow min-w-[250px]">
                     <Input
                         type='text'
                         placeholder='Max price'
@@ -244,6 +257,13 @@ export default function Filters({ setIsOpen }: any) {
                 >
                     Clear Filter
                 </Button>
+                
+                {!validation && <div className="flex-grow min-w-[1250px]">
+                    <p className='text-sm text-red-500'>
+                        min price should be less than max price
+                    </p>
+                </div>}
+
             </div>
         </section>
     )
